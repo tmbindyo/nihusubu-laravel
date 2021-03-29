@@ -8,6 +8,7 @@ use App\Traits\InstitutionCreationTrait;
 use Auth;
 use App\Account;
 use App\Address;
+use App\Agent;
 use App\CampaignType;
 use App\ContactType;
 use App\Frequency;
@@ -127,8 +128,6 @@ class HomeController extends Controller
             'portal' => ['required', 'string', 'max:255', 'unique:institutions'],
         ]);
 
-        // create address
-        $address = $this->addressSeeder($request, $user);
 
 
         // create address
@@ -1520,6 +1519,7 @@ class HomeController extends Controller
         $userAccount->is_active = true;
         $userAccount->is_user = true;
         $userAccount->is_admin = false;
+        $userAccount->is_agent = false;
         $userAccount->user_type_id = '5f29e668-9029-4278-a5e7-9ba9f96a20df';
 
         $userAccount->save();

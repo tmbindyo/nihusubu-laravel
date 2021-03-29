@@ -16,7 +16,11 @@ class CreateSubscriptionsTable extends Migration
         Schema::create('subscriptions', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->string('reference');
+
             $table->decimal('amount', 20,2);
+            $table->decimal('paid', 20,2);
+            // TODO move to institution table
             $table->integer('trial_duration');
 
             $table->integer('month');
@@ -33,7 +37,12 @@ class CreateSubscriptionsTable extends Migration
             $table->uuid('plan_id')->nullable();
 
             $table->boolean('is_paid');
+            $table->boolean('is_fully_paid');
             $table->boolean('is_active');
+            $table->boolean('is_trial_period');
+            $table->boolean('is_promotion');
+
+            $table->text('text')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

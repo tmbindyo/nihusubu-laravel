@@ -32,6 +32,14 @@ class Upload extends Model implements Auditable
     }
 
     // Children
+    public function agentIdCopy()
+    {
+        return $this->hasOne('App\Agent', 'id', 'id_copy');
+    }
+    public function agentKraPin()
+    {
+        return $this->hasOne('App\Agent', 'id', 'kra_pin_copy');
+    }
     public function productGroupImages()
     {
         return $this->hasOne('App\ProductGroupImage');

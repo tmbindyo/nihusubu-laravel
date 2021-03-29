@@ -18,10 +18,12 @@ class CreateSubscriptionPaymentsTable extends Migration
 
             $table->decimal('amount', 20,2);
 
-            $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned()->nullable();
             $table->uuid('status_id');
             $table->uuid('subscription_type_id');
             $table->uuid('subscription_id');
+
+            $table->uuid('is_admin_recorded');
 
             $table->timestamps();
             $table->softDeletes();

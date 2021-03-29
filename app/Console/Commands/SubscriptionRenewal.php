@@ -3,13 +3,17 @@
 namespace App\Console\Commands;
 
 use App\Institution;
-use App\InstitutionModule;
 use App\Subscription;
+use App\InstitutionModule;
 use App\SubscriptionModule;
 use Illuminate\Console\Command;
+use App\Traits\ReferenceNumberTrait;
 
 class SubscriptionRenewal extends Command
 {
+
+    use ReferenceNumberTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -59,20 +63,19 @@ class SubscriptionRenewal extends Command
         foreach($subscriptions as $subscription){
             // check if subscription for month already exists
 
+            $is_trial_period = false;
+
+            // get the date the institution was registered
+            $trialEnd = date('Y-m-d', strtotime($subscription->institution->created_at. '+ 90 days'));
+            // check if the institution is past the trial period
+            $secs = strtotime($trialEnd) - strtotime($today);
+            $days = $secs / 86400;
+
+            $trialDuration = $days;
+
             // check if trial
-            if($subscription->trial_duration >0){
-                // get the date the institution was registered
-                $institution = Institution::where('id',$subscription->institution_id)->first();
-                $institutionRegistered = date('Y-m-d', strtotime($subscription->institution->created_at));
-                $trialEnd = date('Y-m-d', strtotime($subscription->institution->created_at. '+ 90 days'));
-                // return $institutionRegistered.':'.$trialEnd;
-                // check if the institution is past the trial period
-                $secs = strtotime($trialEnd) - strtotime($today);
-                $days = $secs / 86400;
-
-
-                $trialDuration = $days;
-
+            if($trialDuration >0){
+                $is_trial_period = True;
             }else{
                 $trialDuration = 0;
             }
@@ -82,16 +85,29 @@ class SubscriptionRenewal extends Command
                 if($subscriptionChecker){
                     $subscriptionExists = true;
                 }else{
-                    // create new subscription for next month
+
+                $end_date = date('Y-m-d', strtotime('+3 months'));
+
+                $size = 5;
+                $reference = $this->getRandomString($size);
+
+                // create new subscription for next month
                 $nextMonthSubscription = new Subscription();
                 $nextMonthSubscription->trial_duration = $trialDuration;
+                $nextMonthSubscription->reference = $reference;
                 $nextMonthSubscription->amount = 0;
                 $nextMonthSubscription->start_date = now();
+                $nextMonthSubscription->end_date = $end_date;
                 $nextMonthSubscription->month = $subscriptionMonth;
                 $nextMonthSubscription->year = $subscriptionYear;
                 $nextMonthSubscription->is_institution = true;
                 $nextMonthSubscription->is_user = false;
                 $nextMonthSubscription->is_active = false;
+
+                $nextMonthSubscription->is_paid = false;
+                $nextMonthSubscription->is_trial_period = $is_trial_period;
+                $nextMonthSubscription->is_promotion = false;
+
                 $nextMonthSubscription->institution_id = $subscription->institution->id;
                 $nextMonthSubscription->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
                 $nextMonthSubscription->user_id = 1;
@@ -103,6 +119,8 @@ class SubscriptionRenewal extends Command
                 foreach($institutionModules as $institutionModule){
                     // check if subscription module exists
                     $subscriptionModuleExists = SubscriptionModule::where('institution_id',$subscription->institution->id)->where('module_id', $institutionModule->module->id)->where('year', now()->format('yy'))->where('month', $subscriptionMonth)->first();
+
+                    $end_date = date('Y-m-d', strtotime('+3 months'));
                     // create institution module subscription tracker
                     $subscriptionModule = new SubscriptionModule();
                     $subscriptionModule->amount = 0;
@@ -110,6 +128,7 @@ class SubscriptionRenewal extends Command
                     $subscriptionModule->year = $subscriptionYear;
                     $subscriptionModule->last_updated = date('Y-m-d', strtotime(now()));
                     $subscriptionModule->start_date = now();
+                    $subscriptionModule->end_date = $end_date;
                     $subscriptionModule->module_id = $institutionModule->module->id;
                     $subscriptionModule->subscription_id = $nextMonthSubscription->id;
                     $subscriptionModule->institution_module_id = $institutionModule->id;

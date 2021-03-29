@@ -61,97 +61,18 @@
                     </li>
                 @endif
 
+
+
             </ol>
         </div>
         <div class="col-lg-6">
             <div class="title-action">
-
-            </div>
-        </div>
-    </div>
-    <div class="wrapper wrapper-content">
-        <div class="row">
-            <div class="col-lg-10 col-lg-offset-1 animated fadeInRight">
-                <div class="mail-box-header">
-                    <div class="pull-right tooltip-demo">
-{{--                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to draft folder"><i class="fa fa-pencil"></i> Draft</a>--}}
-{{--                        <a href="mailbox.html" class="btn btn-danger btn-sm" data-toggle="tooltip" data-placement="top" title="Discard email"><i class="fa fa-times"></i> Discard</a>--}}
-                    </div>
-                    <h2>
-                        Compse mail
-                    </h2>
-                </div>
-                <div class="mail-box">
-
-
-                    <form class="form-horizontal" method="post" action="{{ route('business.sale.send',['portal'=>$institution->portal,'sale_id'=>$sale->id]) }}">
-                        @csrf
-
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
-                        <div class="mail-body">
-
-
-                            <div class="form-group">
-                                @if ($errors->has('email'))
-                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                                <label class="col-sm-2 control-label">To:</label>
-                                <div class="col-sm-10">
-                                    <input name="email" type="text" class="form-control {{ $errors->has('email') ? ' is-invalid' : '' }}" value="{{$sale->contact->email}}">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                @if ($errors->has('subject'))
-                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                        <strong>{{ $errors->first('subject') }}</strong>
-                                    </span>
-                                @endif
-                                <label class="col-sm-2 control-label">Subject:</label>
-                                <div class="col-sm-10">
-                                    <input name="subject" type="text" class="form-control {{ $errors->has('subject') ? ' is-invalid' : '' }}" value="@if($sale->is_estimate ==1) Estimate @elseif($sale->is_invoice ==1) Invoice @elseif($sale->is_sale==1) Sale @elseif($sale->is_order==1) Order @else Sale @endif ref #{{$sale->reference}}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mail-text h-200">
-                            @if ($errors->has('body'))
-                                <span class="invalid-feedback" style="display: block;" role="alert">
-                                    <strong>{{ $errors->first('body') }}</strong>
-                                </span>
-                            @endif
-                            <textarea class="summernote {{ $errors->has('body') ? ' is-invalid' : '' }}" name="body">
-                                <h3>Hello {{$sale->contact->first_name}} {{$sale->contact->last_name}}! </h3>
-                                dummy text of the printing and typesetting industry. <strong>Lorem Ipsum has been the industry's</strong> standard dummy text ever since the 1500s,
-                                when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-                                typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with
-                                <br/>
-                                <br/>
-
-                            </textarea>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="mail-body text-right tooltip-demo">
-                            <button class="btn btn-sm btn-primary" type="submit"><i class="fa fa-reply"></i> Send</button>
-                            <a href="{{route('business.sale.show',['portal'=>$institution->portal,'id'=>$sale->id])}}" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Discard email"><i class="fa fa-times"></i> Discard</a>
-    {{--                        <a href="mailbox.html" class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="Move to draft folder"><i class="fa fa-pencil"></i> Draft</a>--}}
-                        </div>
-                    </form>
-
-                    <div class="clearfix"></div>
-
-
-
-                </div>
+                @can('add brand')
+                    <a data-toggle="modal" data-target="#emailRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> Email </a>
+                @endcan
+                @can('add brand')
+                    <a data-toggle="modal" data-target="#smsRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> SMS </a>
+                @endcan
             </div>
         </div>
     </div>
@@ -267,6 +188,8 @@
 
 @endsection
 
+@include('business.layouts.modals.email_create')
+@include('business.layouts.modals.sms_create')
 
 @section('js')
 <!-- Mainly scripts -->

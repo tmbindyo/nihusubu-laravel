@@ -33,7 +33,6 @@ class CreateInstitutionsTable extends Migration
 
             $table->integer('user_id')->unsigned();
             $table->uuid('status_id');
-            $table->uuid('plan_id');
             $table->uuid('logo_id')->nullable();
             $table->uuid('address_id')->nullable();
             $table->uuid('currency_id');
@@ -43,9 +42,14 @@ class CreateInstitutionsTable extends Migration
             $table->uuid('primary_contact_id')->nullable();
             $table->uuid('commerce_template_id')->nullable();
 
+            $table->boolean('is_agent_signup')->nullable();
+            $table->uuid('agent_id')->nullable();
+
             $table->boolean('is_active');
             $table->boolean('is_sale_tax');
             $table->boolean('is_sale_random');
+
+            $table->decimal('due',20,2);
 
             $table->timestamps();
             $table->softDeletes();

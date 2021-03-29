@@ -163,17 +163,13 @@
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    @if ($errors->has('plan'))
+                                    @if ($errors->has('agent_code'))
                                         <span class="invalid-feedback" style="display: block;" role="alert">
-                                            <strong>{{ $errors->first('plan') }}</strong>
+                                            <strong>{{ $errors->first('agent_code') }}</strong>
                                         </span>
                                     @endif
-                                    <label>Plan *</label>
-                                    <select name="plan" id="plan" class="form-control input-lg {{ $errors->has('plan') ? ' is-invalid' : '' }} required">
-                                        @foreach($plans as $plan)
-                                            <option value="{{$plan->id}}">{{$plan->name}}[{{$plan->price}}]</option>
-                                        @endforeach
-                                    </select>
+                                    <label>Agent Code</label>
+                                    <input id="agent_code" name="agent_code" placeholder="{{ __('Agent Code') }}" value="{{ old('agent_code') }}" type="number" class="form-control {{ $errors->has('agent_code') ? ' is-invalid' : '' }} input-lg required">
                                 </div>
                             </div>
 

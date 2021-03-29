@@ -17,13 +17,17 @@ class CreateUserAccountsTable extends Migration
             $table->uuid('id')->primary();
 
             $table->integer('user_id')->unsigned();
-            $table->integer('registerer_id')->unsigned();
+            $table->integer('registerer_id')->unsigned()->nullable();
             $table->uuid('institution_id')->nullable();
             $table->uuid('status_id');
             $table->uuid('user_type_id');
             $table->boolean('is_user');
             $table->boolean('is_admin');
             $table->boolean('is_institution');
+            $table->boolean('is_agent');
+
+            $table->boolean('is_agent_signup')->nullable();
+            $table->uuid('agent_id')->nullable();
 
             $table->boolean('is_active');
 

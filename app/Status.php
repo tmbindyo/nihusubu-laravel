@@ -36,6 +36,30 @@ class Status extends Model implements Auditable
     {
         return $this->hasMany('App\Address');
     }
+    public function agents()
+    {
+        return $this->hasMany('App\Agent');
+    }
+    public function agentCommissions()
+    {
+        return $this->hasMany('App\AgentCommission');
+    }
+    public function agentInstitutions()
+    {
+        return $this->hasMany('App\Institution');
+    }
+    public function agentTierChanges()
+    {
+        return $this->hasMany('App\AgentTierChange');
+    }
+    public function agentUsers()
+    {
+        return $this->hasMany('App\User');
+    }
+    public function agentPayments()
+    {
+        return $this->hasMany('App\AgentPayment');
+    }
     public function branches()
     {
         return $this->hasMany('App\Branch');
@@ -323,6 +347,10 @@ class Status extends Model implements Auditable
     public function taxes()
     {
         return $this->hasMany('App\Tax');
+    }
+    public function tier()
+    {
+        return $this->belongsTo('App\Tier');
     }
     public function timesheets()
     {

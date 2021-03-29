@@ -35,6 +35,7 @@ Route::get('/{portal}/campaign/expense/create/{campaign_id}', 'Business\CRMContr
 Route::get('/{portal}/campaign/organization/create/{campaign_id}', 'Business\CRMController@campaignOrganizationCreate')->name('business.campaign.organization.create');
 
 
+
 // Campaign uploads
 Route::get('/{portal}/campaign/uploads/{campaign_id}', 'Business\CRMController@campaignUploads')->name('business.campaign.uploads');
 Route::post('/{portal}/campaign/upload/store/{campaign_id}', 'Business\CRMController@campaignUploadStore')->name('business.campaign.upload.store');
@@ -56,6 +57,7 @@ Route::get('/{portal}/contact/loan/create/{contact_id}', 'Business\CRMController
 Route::get('/{portal}/contact/sale/create/{contact_id}', 'Business\CRMController@contactSaleCreate')->name('business.contact.sale.create');
 
 
+
 // organizations
 Route::get('/{portal}/organizations', 'Business\CRMController@organizations')->name('business.organizations');
 Route::get('/{portal}/organization/create', 'Business\CRMController@organizationCreate')->name('business.organization.create');
@@ -67,8 +69,6 @@ Route::get('/{portal}/organization/restore/{organization_id}', 'Business\CRMCont
 
 Route::get('/{portal}/organization/contact/create/{organization_id}', 'Business\CRMController@organizationContactCreate')->name('business.organization.contact.create');
 Route::get('/{portal}/organization/deal/create/{organization_id}', 'Business\CRMController@organizationDealCreate')->name('business.organization.deal.create');
-
-
 
 
 
@@ -185,7 +185,8 @@ Route::get('/{portal}/sale/delete/{sale_id}', 'Business\SaleController@saleDelet
 Route::get('/{portal}/sale/restore/{sale_id}', 'Business\SaleController@saleRestore')->name('business.sale.restore');
 Route::get('/{portal}/sale/print/{sale_id}', 'Business\SaleController@salePrint')->name('business.sale.print');
 Route::get('/{portal}/sale/compose/{sale_id}', 'Business\SaleController@saleCompose')->name('business.sale.compose');
-Route::post('/{portal}/sale/send/{sale_id}', 'Business\SaleController@saleSend')->name('business.sale.send');
+Route::post('/{portal}/sale/send/email/{sale_id}', 'Business\SaleController@businessSendEmail')->name('business.sale.send.email');
+Route::post('/{portal}/sale/send/sms/{sale_id}', 'Business\SaleController@businessSendSMS')->name('business.sale.send.sms');
 
 Route::get('/{portal}/sale/payment/create/{sale_id}', 'Business\SaleController@salePaymentCreate')->name('business.sale.payment.create');
 Route::get('/{portal}/sale/product/delete/{invoice_product_id}', 'Business\SaleController@saleProductDelete')->name('business.sale.product.delete');
@@ -426,6 +427,9 @@ Route::get('/{portal}/earning/policy/delete/{holiday_id}', 'Business\EmployeeCon
 
 // settings
 Route::get('/{portal}/settings', 'Business\SettingController@settings')->name('business.settings');
+
+// subscriptions
+Route::get('/{portal}/subscription/print/{subscription_id}', 'Business\SettingController@subscriptionPrint')->name('business.subscription.print');
 
 // Brands
 Route::get('/{portal}/brands', 'Business\SettingController@brands')->name('business.brands');

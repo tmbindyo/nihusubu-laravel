@@ -9,9 +9,10 @@ use App\Tax;
 use App\Unit;
 use App\View;
 use App\Loan;
-use App\Reason;
+use App\Agent;
 use App\Title;
 use App\Module;
+use App\Reason;
 use App\Invoice;
 use App\Address;
 use App\Account;
@@ -36,18 +37,32 @@ trait InstitutionCreationTrait
 
     use ReferenceNumberTrait;
 
-    public function institutionModuleSeeder ($user, $institution){
+    public function institutionModuleSeeder ($user, $institution)
+    {
 
+        $size = 5;
+        $reference = $this->getRandomString($size);
+        // $end_date = date('Y-m-d', strtotime('+3 month', now()));
+        $new_end_date = date('Y-m-d', strtotime('+1 months'));
         // create subscription record
         $subscription = new Subscription();
+        $subscription->reference = $reference;
         $subscription->trial_duration = 90;
         $subscription->amount = 0;
+        $subscription->paid = 0;
         $subscription->start_date = now();
+        $subscription->end_date = $new_end_date;
         $subscription->month = now()->format('m');
         $subscription->year = now()->format('yy');
         $subscription->is_institution = true;
         $subscription->is_user = false;
         $subscription->is_active = true;
+
+        $subscription->is_paid = False;
+        $subscription->is_fully_paid = False;
+        $subscription->is_trial_period = true;
+        $subscription->is_promotion = False;
+
         $subscription->institution_id = $institution->id;
         $subscription->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
         $subscription->user_id = $user->id;
@@ -74,6 +89,7 @@ trait InstitutionCreationTrait
             $subscriptionModule->year = now()->format('yy');
             $subscriptionModule->last_updated = date('Y-m-d', strtotime(now()));
             $subscriptionModule->start_date = now();
+            $subscriptionModule->end_date = $new_end_date;
             $subscriptionModule->module_id = $module->id;
             $subscriptionModule->subscription_id = $subscription->id;
             $subscriptionModule->institution_module_id = $institutionModule->id;
@@ -102,18 +118,29 @@ trait InstitutionCreationTrait
 
     public function institutionSeeder($request, $user, $address){
 
+        $joined_with_agent = False;
+        $agent_id = null;
+        $agent_code = intval($request->agent_code);
+        $agent = Agent::where('code',$agent_code)->first();
+        if ($agent){
+            $joined_with_agent = True;
+            $agent_id = $agent->id;
+        }
+
         $institution = new Institution();
         $institution->name = $request->business_name;
         $institution->portal = $request->portal;
         $institution->email = $request->business_email;
         $institution->phone_number = $request->business_phone_number;
         $institution->user_id = $user->id;
-        $institution->plan_id = $request->plan;
+        $institution->currency_id = $request->currency;
         $institution->is_active = true;
         $institution->is_sale_tax = true;
         $institution->is_sale_random = true;
+        $institution->is_agent_signup = $joined_with_agent;
+        $institution->is_agent_signup = $joined_with_agent;
         $institution->address_id = $address->id;
-        $institution->currency_id = "0839e6c9-20b3-4442-b3b6-5137a4d309ec";
+        $institution->agent_id = $agent_id;
         $institution->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
         $institution->save();
 
@@ -1088,6 +1115,7 @@ trait InstitutionCreationTrait
         $userAccount->is_active = true;
         $userAccount->is_user = false;
         $userAccount->is_admin = false;
+        $userAccount->is_agent = false;
         $userAccount->institution_id = $institution->id;
         $userAccount->user_type_id = '07c99d10-8e09-4861-83df-fdd3700d7e48';
         $userAccount->save();

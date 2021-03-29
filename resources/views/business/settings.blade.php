@@ -24,7 +24,7 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="tabs-container">
-                    <div class="tabs-left">
+                    <div class="tabs-top">
                         <ul class="nav nav-tabs">
                             <li class="@if(session()->get( 'active' ) == 'brands') active @elseif(is_null(session()->get( 'active' ))) active @endif"><a data-toggle="tab" href="#brands"> Brands</a></li>
                             <li class="@if(session()->get( 'active' ) == 'campaignTypes') active @endif"><a data-toggle="tab" href="#campaignTypes">Campaign Types</a></li>
@@ -33,6 +33,7 @@
                             <li class="@if(session()->get( 'active' ) == 'institution') active @endif"><a data-toggle="tab" href="#institution">Institution</a></li>
                             <li class="@if(session()->get( 'active' ) == 'leadSources') active @endif"><a data-toggle="tab" href="#leadSources">Lead Sources</a></li>
                             <li class="@if(session()->get( 'active' ) == 'modules') active @endif"><a data-toggle="tab" href="#modules">Modules</a></li>
+                            <li class="@if(session()->get( 'active' ) == 'subscriptions') active @endif"><a data-toggle="tab" href="#subscriptions">Subscriptions</a></li>
                             <li class="@if(session()->get( 'active' ) == 'paymentSchedules') active @endif"><a data-toggle="tab" href="#paymentSchedules">Payment Schedules</a></li>
                             <li class="@if(session()->get( 'active' ) == 'productCategories') active @endif"><a data-toggle="tab" href="#productCategories">Product Categories</a></li>
                             <li class="@if(session()->get( 'active' ) == 'productSubCategories') active @endif"><a data-toggle="tab" href="#productSubCategories">Product Sub Categories</a></li>
@@ -356,6 +357,119 @@
 
                                 </div>
                             </div>
+                            <div id="subscriptions" class="tab-pane @if(session()->get( 'active' ) == 'subscriptions') active @endif">
+                                <div class="panel-body">
+                                    <br>
+                                    <br>
+                                    <br>
+
+                                    @can('view subscriptions')
+                                        {{-- contact types --}}
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                                <thead>
+                                                    <tr>
+                                                        <th>Amount</th>
+                                                        <th>Month</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Status</th>
+                                                        <th class="text-right" width="80em" data-sort-ignore="true">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach($subscriptions as $subscription)
+                                                        <tr class="gradeX">
+                                                            <td>{{$subscription->amount}}</td>
+                                                            <td>{{$subscription->month}}-{{$subscription->year}}</td>
+                                                            <td>{{$subscription->start_date}}</td>
+                                                            <td>{{$subscription->end_date}}</td>
+                                                            <td>
+                                                                @if($subscription->is_trial_period)
+                                                                    <span class="label label-primary">Trial Period</span>
+                                                                @elseif($subscription->is_promotion)
+                                                                    <span class="label label-primary">Promotion</span>
+                                                                @else
+                                                                    @if($subscription->is_paid)
+                                                                        <span class="label label-primary">Paid</span>
+                                                                    @else
+                                                                        <span class="label label-warning">Un Paid</span>
+                                                                    @endif
+                                                                @endif
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <div class="btn-group">
+                                                                    @can('view subscription')
+                                                                        <a href="{{ route('business.subscription.print', ['portal'=>$institution->portal, 'id'=>$subscription->id]) }}" class="btn-white btn btn-xs">View</a>
+                                                                    @endcan
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Amount</th>
+                                                        <th>Month</th>
+                                                        <th>Start Date</th>
+                                                        <th>End Date</th>
+                                                        <th>Status</th>
+                                                        <th class="text-right" width="80em" data-sort-ignore="true">Action</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+
+                                        {{-- deleted contact types --}}
+                                        @if($deletedContactTypes->count())
+                                            <h3 class="text-center">Deleted Contact Types</h3>
+                                            <br>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>User</th>
+                                                        <th>Status</th>
+                                                        <th class="text-right" width="80em" data-sort-ignore="true">Action</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    @foreach($deletedContactTypes as $contactType)
+                                                        <tr class="gradeX">
+                                                            <td>{{$contactType->name}}</td>
+                                                            <td>{{$contactType->user->name}}</td>
+                                                            <td>
+                                                                <span class="label {{$contactType->status->label}}">{{$contactType->status->name}}</span>
+                                                            </td>
+                                                            <td class="text-right">
+                                                                <div class="btn-group">
+                                                                    @can('view contact type')
+                                                                        <a href="{{ route('business.contact.type.show', ['portal'=>$institution->portal, 'id'=>$contactType->id]) }}" class="btn-white btn btn-xs">View</a>
+                                                                    @endcan
+                                                                    @can('delete contact type')
+                                                                        <a href="{{ route('business.contact.type.restore', ['portal'=>$institution->portal, 'id'=>$contactType->id]) }}" class="btn-warning btn btn-xs">Restore</a>
+                                                                    @endcan
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <th>Name</th>
+                                                        <th>User</th>
+                                                        <th>Status</th>
+                                                        <th class="text-right" width="80em" data-sort-ignore="true">Action</th>
+                                                    </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        @endif
+                                    @endcan
+
+                                </div>
+                            </div>
                             <div id="frequencies" class="tab-pane @if(session()->get( 'active' ) == 'frequencies') active @endif">
                                 <div class="panel-body">
 
@@ -462,6 +576,212 @@
 
                                 </div>
                             </div>
+                            <div id="institution" class="tab-pane @if(session()->get( 'active' ) == 'institution') active @endif">
+                                <div class="panel-body">
+
+                                    <div class="">
+                                        <div class="col-md-12">
+                                            <form method="post" action="{{ route('business.institution.update',['portal'=>$institution->portal, 'id'=>$institution->id]) }}" autocomplete="off" class="form-horizontal form-label-left">
+                                                @csrf
+
+                                                @if ($errors->any())
+                                                    <div class="alert alert-danger">
+                                                        <ul>
+                                                            @foreach ($errors->all() as $error)
+                                                                <li>{{ $error }}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    </div>
+                                                @endif
+
+                                                <div class="col-md-12">
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-8">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('name'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('name') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="name" name="name" required="required" value="{{$institution->name}}" class="form-control input-lg">
+                                                                <i>name</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('portal'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('portal') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="portal" name="portal" required="required" value="{{$institution->portal}}" class="form-control input-lg">
+                                                                <i>portal</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('email'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('email') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="email" id="email" name="email" required="required" value="{{$institution->email}}" class="form-control input-lg">
+                                                                <i>email</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('phone_number'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('"phone_number') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="phone_number" name="phone_number" data-mask="(999) 999-999-999" required="required" value="{{$institution->phone_number}}" class="form-control input-lg">
+                                                                <i>phone number</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('address_line_1'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('address_line_1') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="address_line_1" name="address_line_1" required="required" value="{{$institution->address->address_line_1}}" class="form-control input-lg">
+                                                                <i>address line 1</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('address_line_2'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('address_line_2') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="address_line_2" name="address_line_2" required="required" value="{{$institution->address->address_line_2}}" class="form-control input-lg">
+                                                                <i>address line 2</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-4">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('street'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('street') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="street" name="street" required="required" value="{{$institution->address->street}}" class="form-control input-lg">
+                                                                <i>street</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('city'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('city') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="city" name="city" required="required" value="{{$institution->address->town}}" class="form-control input-lg">
+                                                                <i>city</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-4">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('postal_code'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('postal_code') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <input type="text" id="postal_code" name="postal_code" required="required" value="{{$institution->address->postal_code}}" class="form-control input-lg">
+                                                                <i>postal code</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('currency'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                <strong>{{ $errors->first('currency') }}</strong>
+                                                            </span>
+                                                                @endif
+                                                                <select name="currency" data-placeholder="Choose a currency..." class="chosen-select" {{ $errors->has('currency') ? ' is-invalid' : '' }}  tabindex="2">
+                                                                    <option></option>
+                                                                    @foreach($currencies as $currency)
+                                                                        <option @if($institution->currency->id == $currency->id) selected @endif value="{{$currency->id}}">{{$currency->name}}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <i>currency</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('agent'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                        <strong>{{ $errors->first('agent') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                                <select name="agent" data-placeholder="agent..." class="chosen-select {{ $errors->has('agent') ? ' is-invalid' : '' }}"  tabindex="2">
+                                                                    @if($institution->is_agent_signup)
+                                                                        <option value="">Nihu00{{$institution->agent->code}}</option>
+                                                                    @endif
+                                                                </select>
+                                                                <i>agent</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <br>
+                                                    <div class="row">
+                                                        <div class="col-lg-2">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('sale_format'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                        <strong>{{ $errors->first('sale_format') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                                <input name="is_sale_random" id="is_sale_random" type="checkbox" @if($institution->is_sale_random) checked @endif class="enablerandomReference {{ $errors->has('is_sale_random') ? ' is-invalid' : '' }}" />
+                                                                <i>sale reference random</i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-lg-6">
+                                                            <div class="has-warning">
+                                                                @if ($errors->has('sale_format'))
+                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
+                                                                        <strong>{{ $errors->first('sale_format') }}</strong>
+                                                                    </span>
+                                                                @endif
+                                                                <input type="text" id="sale_format" name="sale_format" required="required" placeholder="Sale format" value="{{$institution->sale_format}}" class="form-control input-lg" @if($institution->is_sale_random) disabled @endif>
+                                                                <i>sale format</i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    @can('edit institution')
+                                                        <hr>
+
+                                                        <div class="text-center">
+                                                            <button type="submit" class="btn btn-block btn-lg btn-outline btn-success mt-4">{{ __('Update') }}</button>
+                                                        </div>
+                                                    @endcan
+                                                </div>
+
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="leadSources" class="tab-pane @if(session()->get( 'active' ) == 'leadSources') active @endif">
                                 <div class="panel-body">
 
@@ -563,6 +883,139 @@
                                             </div>
                                         @endif
                                     @endcan
+
+                                </div>
+                            </div>
+                            <div id="modules" class="tab-pane @if(session()->get( 'active' ) == 'modules') active @endif">
+                                <div class="panel-body">
+
+                                    <div class="ibox">
+                                        <div class="ibox-content">
+
+                                            <div class="row m-b-lg m-t-lg">
+                                                <div class="col-lg-6 col-md-3">
+
+                                                    <div class="profile-image">
+                                                        <img src="{{ asset('inspinia') }}/img/a4.jpg" class="img-circle circle-border m-b-md" alt="profile">
+                                                    </div>
+                                                    <div class="profile-info">
+                                                        <div class="">
+                                                            <div>
+                                                                <h2 class="no-margins">
+                                                                    Alex Smith
+                                                                </h2>
+                                                                <h4>Founder of Groupeq</h4>
+                                                                <small>
+                                                                    There are many variations of passages of Lorem Ipsum available, but the majority
+                                                                    have suffered alteration in some form Ipsum available.
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                    <table class="table small m-b-xs">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <strong>142</strong> Projects
+                                                            </td>
+                                                            <td>
+                                                                <strong>22</strong> Followers
+                                                            </td>
+
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <strong>61</strong> Comments
+                                                            </td>
+                                                            <td>
+                                                                <strong>54</strong> Articles
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <strong>154</strong> Tags
+                                                            </td>
+                                                            <td>
+                                                                <strong>32</strong> Friends
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="col-lg-3 col-md-3">
+                                                    <small>Month Price</small>
+                                                    <h2 class="no-margins">{{$institution->currency->name}} 206 480</h2>
+                                                    <div id="sparkline1"></div>
+                                                    <br>
+                                                </div>
+                                            </div>
+                                            <br>
+                                            {{--  --}}
+                                            <div class="row">
+                                                @foreach($modules as $module)
+                                                    <div class="col-lg-4">
+                                                        <div class="ibox">
+                                                            <div class="ibox-title">
+                                                                <span class="label label-primary pull-right">NEW</span>
+                                                                <h5>{{$module->name}}</h5>
+                                                            </div>
+                                                            <div class="ibox-content">
+                                                                <div class="team-members">
+                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a1.jpg"></a>
+                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a2.jpg"></a>
+                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a3.jpg"></a>
+                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a5.jpg"></a>
+                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a6.jpg"></a>
+                                                                </div>
+                                                                <h4>Info about {{$module->name}}</h4>
+                                                                <p>
+                                                                    {{ Str::limit($module->description, $limit = 171, $end = '...') }}
+                                                                </p>
+                                                                <div>
+                                                                    <span>Status of current project:</span>
+                                                                    <div class="stat-percent">48%</div>
+                                                                    <div class="progress progress-mini">
+                                                                        <div style="width: 48%;" class="progress-bar"></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row  m-t-sm">
+                                                                    <div class="col-sm-4">
+                                                                        <div class="font-bold">PROJECTS</div>
+                                                                        12
+                                                                    </div>
+                                                                    <div class="col-sm-4">
+                                                                        <div class="font-bold">RANKING</div>
+                                                                        4th
+                                                                    </div>
+                                                                    <div class="col-sm-4 text-right">
+                                                                        <div class="font-bold">Price</div>
+                                                                        {{$institution->currency->name}} {{$module->price}}
+                                                                    </div>
+                                                                </div>
+                                                                <br>
+                                                                <div class="user-button">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6 col-md-offset-6">
+                                                                            @if ( in_array($module->id, $institutionModulesIds) )
+                                                                                <a href="{{ route('business.module.unsubscribe', ['portal'=>$institution->portal, 'id'=>$module->id]) }}" type="button" class="btn btn-warning btn-sm btn-block pull-right"><i class="fa fa-times"></i> Unubscribe</a>
+                                                                            @else
+                                                                                <a href="{{ route('business.module.subscribe', ['portal'=>$institution->portal, 'id'=>$module->id]) }}" type="button" class="btn btn-primary btn-sm btn-block pull-right"><i class="fa fa-check"></i> Subscribe</a>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
@@ -890,6 +1343,57 @@
 
                                 </div>
                             </div>
+                            <div id="roles" class="tab-pane @if(session()->get( 'active' ) == 'roles') active @endif">
+                                <div class="panel-body">
+
+                                    @can('add role')
+                                        <a data-toggle="modal" data-target="#roleRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> Role </a>
+                                    @endcan
+                                    <br>
+                                    <br>
+                                    <br>
+
+                                    @can('view roles')
+                                        {{-- roles --}}
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover dataTables-example" >
+                                                <thead>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                @foreach($roles as $role)
+                                                    <tr class="gradeX">
+                                                        <td>{{str_replace($institution->portal.' ', "", $role->name)}}</td>
+                                                        <td class="text-right">
+                                                            <div class="btn-group">
+                                                                @can('view role')
+                                                                    <a href="{{ route('business.role.show', ['portal'=>$institution->portal, 'id'=>encrypt($role->id)]) }}" class="btn-white btn btn-xs">View</a>
+                                                                @endcan
+                                                                @if(str_replace($institution->portal.' ', "", $role->name) != "admin" )
+                                                                    @can('delete role')
+                                                                        <a href="{{ route('business.role.delete', ['portal'=>$institution->portal, 'id'=>$role->id]) }}" class="btn-danger btn btn-xs">Delete</a>
+                                                                    @endcan
+                                                                @endif
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                                </tbody>
+                                                <tfoot>
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
+                                                </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    @endcan
+
+                                </div>
+                            </div>
                             <div id="taxes" class="tab-pane @if(session()->get( 'active' ) == 'taxes') active @endif">
                                 <div class="panel-body">
 
@@ -1212,57 +1716,6 @@
 
                                 </div>
                             </div>
-                            <div id="roles" class="tab-pane @if(session()->get( 'active' ) == 'roles') active @endif">
-                                <div class="panel-body">
-
-                                    @can('add role')
-                                        <a data-toggle="modal" data-target="#roleRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> Role </a>
-                                    @endcan
-                                    <br>
-                                    <br>
-                                    <br>
-
-                                    @can('view roles')
-                                        {{-- roles --}}
-                                        <div class="table-responsive">
-                                            <table class="table table-striped table-bordered table-hover dataTables-example" >
-                                                <thead>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
-                                                </tr>
-                                                </thead>
-                                                <tbody>
-                                                @foreach($roles as $role)
-                                                    <tr class="gradeX">
-                                                        <td>{{str_replace($institution->portal.' ', "", $role->name)}}</td>
-                                                        <td class="text-right">
-                                                            <div class="btn-group">
-                                                                @can('view role')
-                                                                    <a href="{{ route('business.role.show', ['portal'=>$institution->portal, 'id'=>encrypt($role->id)]) }}" class="btn-white btn btn-xs">View</a>
-                                                                @endcan
-                                                                @if(str_replace($institution->portal.' ', "", $role->name) != "admin" )
-                                                                    @can('delete role')
-                                                                        <a href="{{ route('business.role.delete', ['portal'=>$institution->portal, 'id'=>$role->id]) }}" class="btn-danger btn btn-xs">Delete</a>
-                                                                    @endcan
-                                                                @endif
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                                </tbody>
-                                                <tfoot>
-                                                <tr>
-                                                    <th>Name</th>
-                                                    <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
-                                                </tr>
-                                                </tfoot>
-                                            </table>
-                                        </div>
-                                    @endcan
-
-                                </div>
-                            </div>
                             <div id="users" class="tab-pane @if(session()->get( 'active' ) == 'users') active @endif">
                                 <div class="panel-body">
 
@@ -1372,349 +1825,7 @@
 
                                 </div>
                             </div>
-                            <div id="institution" class="tab-pane @if(session()->get( 'active' ) == 'institution') active @endif">
-                                <div class="panel-body">
 
-                                    <div class="">
-                                        <div class="col-md-12">
-                                            <form method="post" action="{{ route('business.institution.update',['portal'=>$institution->portal, 'id'=>$institution->id]) }}" autocomplete="off" class="form-horizontal form-label-left">
-                                                @csrf
-
-                                                @if ($errors->any())
-                                                    <div class="alert alert-danger">
-                                                        <ul>
-                                                            @foreach ($errors->all() as $error)
-                                                                <li>{{ $error }}</li>
-                                                            @endforeach
-                                                        </ul>
-                                                    </div>
-                                                @endif
-
-                                                <div class="col-md-12">
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-8">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('name'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('name') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="name" name="name" required="required" value="{{$institution->name}}" class="form-control input-lg">
-                                                                <i>name</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('portal'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('portal') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="portal" name="portal" required="required" value="{{$institution->portal}}" class="form-control input-lg">
-                                                                <i>portal</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('email'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('email') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="email" id="email" name="email" required="required" value="{{$institution->email}}" class="form-control input-lg">
-                                                                <i>email</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('phone_number'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('"phone_number') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="phone_number" name="phone_number" data-mask="(999) 999-999-999" required="required" value="{{$institution->phone_number}}" class="form-control input-lg">
-                                                                <i>phone number</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('address_line_1'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('address_line_1') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="address_line_1" name="address_line_1" required="required" value="{{$institution->address->address_line_1}}" class="form-control input-lg">
-                                                                <i>address line 1</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('address_line_2'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('address_line_2') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="address_line_2" name="address_line_2" required="required" value="{{$institution->address->address_line_2}}" class="form-control input-lg">
-                                                                <i>address line 2</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-4">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('street'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('street') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="street" name="street" required="required" value="{{$institution->address->street}}" class="form-control input-lg">
-                                                                <i>street</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('city'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('city') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="city" name="city" required="required" value="{{$institution->address->town}}" class="form-control input-lg">
-                                                                <i>city</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-4">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('postal_code'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('postal_code') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <input type="text" id="postal_code" name="postal_code" required="required" value="{{$institution->address->postal_code}}" class="form-control input-lg">
-                                                                <i>postal code</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('currency'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('currency') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                <select name="currency" data-placeholder="Choose a currency..." class="chosen-select" {{ $errors->has('currency') ? ' is-invalid' : '' }}  tabindex="2">
-                                                                    <option></option>
-                                                                    @foreach($currencies as $currency)
-                                                                        <option @if($institution->currency->id == $currency->id) selected @endif value="{{$currency->id}}">{{$currency->name}}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <i>currency</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('plan'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                <strong>{{ $errors->first('plan') }}</strong>
-                                                            </span>
-                                                                @endif
-                                                                    <select name="plan" data-placeholder="Choose a plan..." class="chosen-select {{ $errors->has('plan') ? ' is-invalid' : '' }}"  tabindex="2">
-                                                                    <option></option>
-                                                                    @foreach($plans as $plan)
-                                                                        <option @if($institution->plan->id == $plan->id) selected @endif value="{{$plan->id}}">{{$plan->name}}[{{$plan->price}}]</option>
-                                                                    @endforeach
-                                                                </select>
-                                                                <i>plan</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <br>
-                                                    <div class="row">
-                                                        <div class="col-lg-2">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('sale_format'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                        <strong>{{ $errors->first('sale_format') }}</strong>
-                                                                    </span>
-                                                                @endif
-                                                                <input name="is_sale_random" id="is_sale_random" type="checkbox" @if($institution->is_sale_random) checked @endif class="enablerandomReference {{ $errors->has('is_sale_random') ? ' is-invalid' : '' }}" />
-                                                                <i>sale reference random</i>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-lg-6">
-                                                            <div class="has-warning">
-                                                                @if ($errors->has('sale_format'))
-                                                                    <span class="invalid-feedback" style="display: block;" role="alert">
-                                                                        <strong>{{ $errors->first('sale_format') }}</strong>
-                                                                    </span>
-                                                                @endif
-                                                                <input type="text" id="sale_format" name="sale_format" required="required" placeholder="Sale format" value="{{$institution->sale_format}}" class="form-control input-lg" @if($institution->is_sale_random) disabled @endif>
-                                                                <i>sale format</i>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-
-                                                    @can('edit institution')
-                                                        <hr>
-
-                                                        <div class="text-center">
-                                                            <button type="submit" class="btn btn-block btn-lg btn-outline btn-success mt-4">{{ __('Update') }}</button>
-                                                        </div>
-                                                    @endcan
-                                                </div>
-
-
-                                            </form>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-                            </div>
-                            <div id="modules" class="tab-pane @if(session()->get( 'active' ) == 'modules') active @endif">
-                                <div class="panel-body">
-
-                                    <div class="ibox">
-                                        <div class="ibox-content">
-
-                                            <div class="row m-b-lg m-t-lg">
-                                                <div class="col-lg-6 col-md-3">
-
-                                                    <div class="profile-image">
-                                                        <img src="{{ asset('inspinia') }}/img/a4.jpg" class="img-circle circle-border m-b-md" alt="profile">
-                                                    </div>
-                                                    <div class="profile-info">
-                                                        <div class="">
-                                                            <div>
-                                                                <h2 class="no-margins">
-                                                                    Alex Smith
-                                                                </h2>
-                                                                <h4>Founder of Groupeq</h4>
-                                                                <small>
-                                                                    There are many variations of passages of Lorem Ipsum available, but the majority
-                                                                    have suffered alteration in some form Ipsum available.
-                                                                </small>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-lg-3 col-md-3">
-                                                    <table class="table small m-b-xs">
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>
-                                                                <strong>142</strong> Projects
-                                                            </td>
-                                                            <td>
-                                                                <strong>22</strong> Followers
-                                                            </td>
-
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <strong>61</strong> Comments
-                                                            </td>
-                                                            <td>
-                                                                <strong>54</strong> Articles
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>
-                                                                <strong>154</strong> Tags
-                                                            </td>
-                                                            <td>
-                                                                <strong>32</strong> Friends
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                                <div class="col-lg-3 col-md-3">
-                                                    <small>Month Price</small>
-                                                    <h2 class="no-margins">{{$institution->currency->name}} 206 480</h2>
-                                                    <div id="sparkline1"></div>
-                                                    <br>
-                                                </div>
-                                            </div>
-                                            <br>
-                                            {{--  --}}
-                                            <div class="row">
-                                                @foreach($modules as $module)
-                                                    <div class="col-lg-4">
-                                                        <div class="ibox">
-                                                            <div class="ibox-title">
-                                                                <span class="label label-primary pull-right">NEW</span>
-                                                                <h5>{{$module->name}}</h5>
-                                                            </div>
-                                                            <div class="ibox-content">
-                                                                <div class="team-members">
-                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a1.jpg"></a>
-                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a2.jpg"></a>
-                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a3.jpg"></a>
-                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a5.jpg"></a>
-                                                                    <a href="#"><img alt="member" class="img-circle" src="{{ asset('inspinia') }}/img/a6.jpg"></a>
-                                                                </div>
-                                                                <h4>Info about {{$module->name}}</h4>
-                                                                <p>
-                                                                    {{ Str::limit($module->description, $limit = 171, $end = '...') }}
-                                                                </p>
-                                                                <div>
-                                                                    <span>Status of current project:</span>
-                                                                    <div class="stat-percent">48%</div>
-                                                                    <div class="progress progress-mini">
-                                                                        <div style="width: 48%;" class="progress-bar"></div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row  m-t-sm">
-                                                                    <div class="col-sm-4">
-                                                                        <div class="font-bold">PROJECTS</div>
-                                                                        12
-                                                                    </div>
-                                                                    <div class="col-sm-4">
-                                                                        <div class="font-bold">RANKING</div>
-                                                                        4th
-                                                                    </div>
-                                                                    <div class="col-sm-4 text-right">
-                                                                        <div class="font-bold">Price</div>
-                                                                        {{$institution->currency->name}} {{$module->price}}
-                                                                    </div>
-                                                                </div>
-                                                                <br>
-                                                                <div class="user-button">
-                                                                    <div class="row">
-                                                                        <div class="col-md-6 col-md-offset-6">
-                                                                            @if ( in_array($module->id, $institutionModulesIds) )
-                                                                                <a href="{{ route('business.module.unsubscribe', ['portal'=>$institution->portal, 'id'=>$module->id]) }}" type="button" class="btn btn-warning btn-sm btn-block pull-right"><i class="fa fa-times"></i> Unubscribe</a>
-                                                                            @else
-                                                                                <a href="{{ route('business.module.subscribe', ['portal'=>$institution->portal, 'id'=>$module->id]) }}" type="button" class="btn btn-primary btn-sm btn-block pull-right"><i class="fa fa-check"></i> Subscribe</a>
-                                                                            @endif
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                @endforeach
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
 
 
 

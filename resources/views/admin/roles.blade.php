@@ -21,7 +21,7 @@
             </div>
             <div class="col-lg-2">
                 <div class="title-action">
-                    @can('admin create role')
+                    @can('admin add role')
                         <a data-toggle="modal" data-target="#roleRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> Role </a>
                     @endcan
                 </div>

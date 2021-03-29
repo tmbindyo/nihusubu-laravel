@@ -14,6 +14,7 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
+
         DB::table('users')->insert([
             'name' => 'info',
             'email' => 'info@nihusubu.com',
@@ -42,6 +43,8 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('rSubSouStORtIcti'),
             'created_at' => now()
         ]);
+
+
         // get user
         $tomUser = User::findOrFail(3);
         // get role
@@ -58,6 +61,7 @@ class UserTableSeeder extends Seeder
             'is_active' => true,
             'is_user' => false,
             'is_admin' => true,
+            'is_agent' => false,
             'created_at' => now()
         ]);
 
@@ -86,6 +90,7 @@ class UserTableSeeder extends Seeder
             'is_active' => true,
             'is_user' => false,
             'is_admin' => true,
+            'is_agent' => false,
             'created_at' => now()
         ]);
 

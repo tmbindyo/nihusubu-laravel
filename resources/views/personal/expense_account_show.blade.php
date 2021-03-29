@@ -134,7 +134,7 @@
                                     <hr>
 
                                     <div>
-                                        <button class="btn btn-primary btn-block btn-lg m-t-n-xs" type="submit"><strong>Update</strong></button>
+                                        <button class="btn btn-warning btn-block btn-lg m-t-n-xs" type="submit"><strong>Update</strong></button>
                                     </div>
                                 </form>
                             </div>
@@ -173,7 +173,7 @@
                             </div>
                             <div class="row m-t-sm">
                                 <div class="col-lg-12">
-                                    <div class="panel blank-panel">
+                                    <div class="panel white-panel">
                                         <div class="panel-heading">
                                             <div class="panel-options">
                                                 <ul class="nav nav-tabs">

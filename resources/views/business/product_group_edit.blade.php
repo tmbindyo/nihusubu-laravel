@@ -760,16 +760,21 @@
 
     {{--  Script to prevent form submit on enter key press  --}}
     <script>
-        $(document).ready(function () {
-            $(document).ready(function() {
-                $(window).keydown(function(event){
-                    if(event.keyCode == 13) {
-                        event.preventDefault();
-                        return false;
-                    }
-                });
-            });
+
+        $(document).on("keydown", ":input:not(textarea)", function(event) {
+            return event.key != "Enter";
         });
+
+        // $(document).ready(function () {
+        //     $(document).ready(function() {
+        //         $(window).keydown(function(event){
+        //             if(event.keyCode == 13) {
+        //                 event.preventDefault();
+        //                 return false;
+        //             }
+        //         });
+        //     });
+        // });
     </script>
 
     <script>

@@ -21,6 +21,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     // Children
+
     public function accounts()
     {
         return $this->hasMany('App\Account');
@@ -32,6 +33,38 @@ class User extends Authenticatable implements MustVerifyEmail
     public function address()
     {
         return $this->hasMany('App\Address');
+    }
+    public function agents()
+    {
+        return $this->hasMany('App\Agent');
+    }
+    public function agentCommissions()
+    {
+        return $this->hasMany('App\AgentCommission');
+    }
+    public function agentCommissionsNullifiedBy()
+    {
+        return $this->hasMany('App\AgentCommission', 'id', 'nullified_by');
+    }
+    public function agentUsers()
+    {
+        return $this->hasMany('App\User');
+    }
+    public function agentPayments()
+    {
+        return $this->hasMany('App\AgentPayment');
+    }
+    public function agentTierChanges()
+    {
+        return $this->hasMany('App\AgentTierChange');
+    }
+    public function approvedAgents()
+    {
+        return $this->hasMany('App\Agent', 'id', 'approved_by');
+    }
+    public function registeredAgents()
+    {
+        return $this->hasMany('App\Agent', 'id', 'registered_by');
     }
     public function assigneeToDos()
     {
@@ -64,6 +97,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function departments()
     {
         return $this->hasMany('App\Department');
+    }
+    public function disabled_by()
+    {
+        return $this->hasMany('App\Agent');
     }
     public function estimates()
     {
@@ -312,6 +349,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function taxes()
     {
         return $this->hasMany('App\Tax');
+    }
+    public function tier()
+    {
+        return $this->belongsTo('App\Tier');
     }
     public function timesheets()
     {

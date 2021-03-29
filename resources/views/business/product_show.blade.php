@@ -38,85 +38,292 @@
 
         <div class="row">
 
-            <div class="col-md-3">
-                <div class="widget style1 navy-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-dollar fa-5x"></i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span> Sales </span>
-                            <h2 class="font-bold">{{$product->sale_products_count}}</h2>
-                        </div>
+            <div class="col-sm-8">
+                <h1 class="m-b-xs">
+                    26,900
+                </h1>
+                <small>
+                    Sales in current month
+                </small>
+                <div id="sparkline1" class="m-b-sm"></div>
+                <div class="row">
+                    <div class="col-xs-2">
+                        <small class="stats-label">Pages / Visit</small>
+                        <h4>236 321.80</h4>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <small class="stats-label">% New Visits</small>
+                        <h4>46.11%</h4>
+                    </div>
+                    <div class="col-xs-2">
+                        <small class="stats-label">Last week</small>
+                        <h4>432.021</h4>
+                    </div>
+                    <div class="col-xs-2">
+                        <small class="stats-label">Pages / Visit</small>
+                        <h4>166 781.80</h4>
+                    </div>
+
+                    <div class="col-xs-2">
+                        <small class="stats-label">% New Visits</small>
+                        <h4>22.45%</h4>
+                    </div>
+                    <div class="col-xs-2">
+                        <small class="stats-label">Last week</small>
+                        <h4>862.044</h4>
                     </div>
                 </div>
+
             </div>
+{{--            <div class="col-sm-4">--}}
+{{--                <h1 class="m-b-xs">--}}
+{{--                    98,100--}}
+{{--                </h1>--}}
+{{--                <small>--}}
+{{--                    Sales in last 24h--}}
+{{--                </small>--}}
+{{--                <div id="sparkline2" class="m-b-sm"></div>--}}
+{{--                <div class="row">--}}
+{{--                    <div class="col-xs-4">--}}
+{{--                        <small class="stats-label">Pages / Visit</small>--}}
+{{--                        <h4>166 781.80</h4>--}}
+{{--                    </div>--}}
 
-            <div class="col-md-3">
-                <div class="widget style1 navy-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-shopping-cart fa-5x"></i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span> Orders </span>
-                            <h2 class="font-bold">{{$product->order_products_count}}</h2>
-                        </div>
+{{--                    <div class="col-xs-4">--}}
+{{--                        <small class="stats-label">% New Visits</small>--}}
+{{--                        <h4>22.45%</h4>--}}
+{{--                    </div>--}}
+{{--                    <div class="col-xs-4">--}}
+{{--                        <small class="stats-label">Last week</small>--}}
+{{--                        <h4>862.044</h4>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+
+
+{{--            </div>--}}
+            <div class="col-sm-4">
+
+                <div class="row m-t-xs">
+                    <div class="col-xs-6">
+                        <h5 class="m-b-xs">Income last month</h5>
+                        <h1 class="no-margins">160,000</h1>
+                        <div class="font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
+                    </div>
+                    <div class="col-xs-6">
+                        <h5 class="m-b-xs">Sales current year</h5>
+                        <h1 class="no-margins">42,120</h1>
+                        <div class="font-bold text-navy">98% <i class="fa fa-bolt"></i></div>
                     </div>
                 </div>
+
+
+                <table class="table small m-t-sm">
+                    <tbody>
+                    <tr>
+                        <td>
+                            <strong>142</strong> Total Sold
+
+                        </td>
+                        <td>
+                            <strong>22</strong> Total Sales
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>61</strong> Total Orders
+                        </td>
+                        <td>
+                            <strong>54</strong> Total Orders Sale
+                        </td>
+                    </tr>
+                    <tr>
+                        @if($product->is_service == "1" || $product->is_inventory == "0")
+                        @else
+                            <td>
+                                <strong>{{$product->stock_on_hand->first()->stock_on_hand}} {{$product->unit->name}}</strong> Stock
+                            </td>
+                        @endif
+                        @if($product->reorder_level)
+                            <td>
+                                <strong>{{$product->reorder_level}} {{$product->unit->name}}</strong> Reorder Level
+                            </td>
+                        @endif
+                    </tr>
+                    </tbody>
+                </table>
+
+
+
             </div>
-
-            <div class="col-md-3">
-                <div class="widget style1 navy-bg">
-                    <div class="row">
-                        <div class="col-xs-4">
-                            <i class="fa fa-database fa-5x"></i>
-                        </div>
-                        <div class="col-xs-8 text-right">
-                            <span> Stock On Hand </span>
-                            @if($product->is_service == "1" || $product->is_inventory == "0")
-                                <h2 class="font-bold">N/A</h2>
-                            @else
-                                        <h2 class="font-bold">{{$product->stock_on_hand->first()->stock_on_hand}} {{$product->unit->name}}</h2>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            @if($product->is_service == "0")
-                <div class="col-md-3">
-                    <div class="widget style1 navy-bg">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <i class="fa fa-level-down fa-5x"></i>
-                            </div>
-                            <div class="col-xs-8 text-right">
-                                <span> Reorder Level </span>
-                                <h2 class="font-bold">{{$product->reorder_level}} {{$product->unit->name}}</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            @if($product->is_service == "0")
-                <div class="col-md-3">
-                    <div class="widget style1 navy-bg">
-                        <div class="row">
-                            <div class="col-xs-4">
-                                <i class="fa fa-archive fa-5x"></i>
-                            </div>
-                            <div class="col-xs-8 text-right">
-                                <span> Restocks </span>
-                                <h2 class="font-bold">{{$product->restock_count}}</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
 
         </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="small pull-left col-md-3 m-l-lg m-t-md">
+{{--                    <strong>Sales char</strong> have evolved over the years sometimes.--}}
+                </div>
+                <div class="small pull-right col-md-3 m-t-md text-right">
+{{--                    <strong>There are many</strong> variations of passages of Lorem Ipsum available, but the majority have suffered.--}}
+                </div>
+                <div class="flot-chart m-b-xl">
+                    <div class="flot-chart-content" id="flot-dashboard5-chart"></div>
+                </div>
+            </div>
+        </div>
+
+{{--        <div class="row">--}}
+{{--            <div class="col-lg-2">--}}
+{{--                <div class="ibox float-e-margins">--}}
+{{--                    <div class="ibox-title">--}}
+{{--                        <span class="label label-success pull-right">Monthly</span>--}}
+{{--                        <h5>Views</h5>--}}
+{{--                    </div>--}}
+{{--                    <div class="ibox-content">--}}
+{{--                        <h1 class="no-margins">386,200</h1>--}}
+{{--                        <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>--}}
+{{--                        <small>Total views</small>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-2">--}}
+{{--                <div class="ibox float-e-margins">--}}
+{{--                    <div class="ibox-title">--}}
+{{--                        <span class="label label-info pull-right">Annual</span>--}}
+{{--                        <h5>Orders</h5>--}}
+{{--                    </div>--}}
+{{--                    <div class="ibox-content">--}}
+{{--                        <h1 class="no-margins">80,800</h1>--}}
+{{--                        <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>--}}
+{{--                        <small>New orders</small>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="ibox float-e-margins">--}}
+{{--                    <div class="ibox-title">--}}
+{{--                        <span class="label label-primary pull-right">Today</span>--}}
+{{--                        <h5>visits</h5>--}}
+{{--                    </div>--}}
+{{--                    <div class="ibox-content">--}}
+
+{{--                        <div class="row">--}}
+{{--                            <div class="col-md-6">--}}
+{{--                                <h1 class="no-margins">406,42</h1>--}}
+{{--                                <div class="font-bold text-navy">44% <i class="fa fa-level-up"></i> <small>Rapid pace</small></div>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-md-6">--}}
+{{--                                <h1 class="no-margins">206,12</h1>--}}
+{{--                                <div class="font-bold text-navy">22% <i class="fa fa-level-up"></i> <small>Slow pace</small></div>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+
+
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+{{--            <div class="col-lg-4">--}}
+{{--                <div class="ibox float-e-margins">--}}
+{{--                    <div class="ibox-title">--}}
+{{--                        <h5>Monthly income</h5>--}}
+{{--                        <div class="ibox-tools">--}}
+{{--                            <span class="label label-primary">Updated 12.2015</span>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                    <div class="ibox-content no-padding">--}}
+{{--                        <div class="flot-chart m-t-lg" style="height: 55px;">--}}
+{{--                            <div class="flot-chart-content" id="flot-chart1"></div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+
+{{--                </div>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+
+{{--        <div class="row">--}}
+
+{{--            <div class="col-md-3">--}}
+{{--                <div class="widget style1 navy-bg">--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-xs-4">--}}
+{{--                            <i class="fa fa-dollar fa-5x"></i>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-xs-8 text-right">--}}
+{{--                            <span> Sales </span>--}}
+{{--                            <h2 class="font-bold">{{$product->sale_products_count}}</h2>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="col-md-3">--}}
+{{--                <div class="widget style1 navy-bg">--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-xs-4">--}}
+{{--                            <i class="fa fa-shopping-cart fa-5x"></i>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-xs-8 text-right">--}}
+{{--                            <span> Orders </span>--}}
+{{--                            <h2 class="font-bold">{{$product->order_products_count}}</h2>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
+{{--            <div class="col-md-3">--}}
+{{--                <div class="widget style1 navy-bg">--}}
+{{--                    <div class="row">--}}
+{{--                        <div class="col-xs-4">--}}
+{{--                            <i class="fa fa-database fa-5x"></i>--}}
+{{--                        </div>--}}
+{{--                        <div class="col-xs-8 text-right">--}}
+{{--                            <span> Stock On Hand </span>--}}
+{{--                            @if($product->is_service == "1" || $product->is_inventory == "0")--}}
+{{--                                <h2 class="font-bold">N/A</h2>--}}
+{{--                            @else--}}
+{{--                                        <h2 class="font-bold">{{$product->stock_on_hand->first()->stock_on_hand}} {{$product->unit->name}}</h2>--}}
+{{--                            @endif--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            </div>--}}
+
+{{--            @if($product->is_service == "0")--}}
+{{--                <div class="col-md-3">--}}
+{{--                    <div class="widget style1 navy-bg">--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col-xs-4">--}}
+{{--                                <i class="fa fa-level-down fa-5x"></i>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-xs-8 text-right">--}}
+{{--                                <span> Reorder Level </span>--}}
+{{--                                <h2 class="font-bold">{{$product->reorder_level}} {{$product->unit->name}}</h2>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+
+{{--            @if($product->is_service == "0")--}}
+{{--                <div class="col-md-3">--}}
+{{--                    <div class="widget style1 navy-bg">--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col-xs-4">--}}
+{{--                                <i class="fa fa-archive fa-5x"></i>--}}
+{{--                            </div>--}}
+{{--                            <div class="col-xs-8 text-right">--}}
+{{--                                <span> Restocks </span>--}}
+{{--                                <h2 class="font-bold">{{$product->restock_count}}</h2>--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+{{--            @endif--}}
+
+{{--        </div>--}}
     </div>
 
     {{-- product description --}}
@@ -254,7 +461,7 @@
                     <hr>
                     <div class="row m-t-sm">
                         <div class="col-lg-12">
-                            <div class="panel blank-panel">
+                            <div class="panel white-panel">
                                 <div class="panel-heading">
                                     <div class="panel-options">
                                         <ul class="nav nav-tabs">
@@ -593,6 +800,108 @@
 <script src="{{ asset('inspinia') }}/js/plugins/slick/slick.min.js"></script>
 {{-- slider --}}
 <script src="{{ asset('inspinia') }}/js/plugins/silder-master/jssor.slider.min.js"></script>
+
+<!-- Flot -->
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.tooltip.min.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.spline.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.resize.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.pie.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.symbol.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/curvedLines.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/flot/jquery.flot.time.js"></script>
+
+<!-- Peity -->
+<script src="{{ asset('inspinia') }}/js/plugins/peity/jquery.peity.min.js"></script>
+<script src="{{ asset('inspinia') }}/js/demo/peity-demo.js"></script>
+
+<!-- jQuery UI -->
+<script src="{{ asset('inspinia') }}/js/plugins/jquery-ui/jquery-ui.min.js"></script>
+
+<!-- Jvectormap -->
+<script src="{{ asset('inspinia') }}/js/plugins/jvectormap/jquery-jvectormap-2.0.2.min.js"></script>
+<script src="{{ asset('inspinia') }}/js/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+<!-- Sparkline -->
+<script src="{{ asset('inspinia') }}/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+
+<!-- Sparkline demo data  -->
+<script src="{{ asset('inspinia') }}/js/demo/sparkline-demo.js"></script>
+
+<!-- ChartJS-->
+<script src="{{ asset('inspinia') }}/js/plugins/chartJs/Chart.min.js"></script>
+
+
+<script>
+    $(document).ready(function() {
+
+        var sparklineCharts = function(){
+            $("#sparkline1").sparkline([4, 3, 14, 34, 5, 9, 18, 3, 6, 34, 34, 34, 43, 43, 35, 44, 32, 44, 52, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29], {
+                type: 'line',
+                width: '100%',
+                height: '50',
+                lineColor: '#1ab394',
+                fillColor: "transparent"
+            });
+
+        };
+
+        var sparkResize;
+
+        $(window).resize(function(e) {
+            clearTimeout(sparkResize);
+            sparkResize = setTimeout(sparklineCharts, 500);
+        });
+
+        sparklineCharts();
+
+        var data1 = [
+            [1,8],[2,5],[3,10],[4,4],[5,16],[6,5],[7,11],[8,6],[9,11],[10,20],[11,10],[12,13]
+        ];
+
+        var data2 = [
+            [1,2],[2,7],[3,4],[4,11],[5,4],[6,2],[7,5],[8,11],[9,5],[10,4],[11,1],[12,5]
+        ];
+
+        $("#flot-dashboard5-chart").length && $.plot($("#flot-dashboard5-chart"), [
+                data1
+            ],
+            {
+                series: {
+                    lines: {
+                        show: false,
+                        fill: true
+                    },
+                    splines: {
+                        show: true,
+                        tension: 0.4,
+                        lineWidth: 1,
+                        fill: 0.4
+                    },
+                    points: {
+                        radius: 0,
+                        show: true
+                    },
+                    shadowSize: 2
+                },
+                grid: {
+                    hoverable: true,
+                    clickable: true,
+
+                    borderWidth: 2,
+                    color: 'transparent'
+                },
+                colors: ["#1ab394", "#1C84C6"],
+                xaxis:{
+                },
+                yaxis: {
+                },
+                tooltip: false
+            }
+        );
+
+    });
+</script>
 
 <script>
     var options = { $AutoPlay: 1 };

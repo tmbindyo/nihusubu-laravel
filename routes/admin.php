@@ -24,6 +24,8 @@
  Route::post('/module/update/{module_id}', 'Admin\ModuleController@moduleUpdate')->name('admin.module.update');
 
  Route::get('/payments', 'Admin\PaymentController@payments')->name('admin.payments');
+ Route::post('/record/institution/subscription/payment', 'Admin\PaymentController@recordInstitutionSubscriptionPayment')->name('admin.record.institution.subscription.payment');
+ Route::post('/record/institution/subscription/payment/store', 'Admin\PaymentController@recordInstitutionSubscriptionPaymentStore')->name('admin.record.institution.subscription.payment.store');
  Route::get('/payment/show/{payment_id}', 'Admin\PaymentController@paymentShow')->name('admin.payment.show');
 
 
@@ -55,3 +57,13 @@ Route::get('/delist/user/{user_id}/role/{role_id}', 'Admin\RoleController@userDe
 Route::post('/user/update/{user_id}', 'Admin\RoleController@userUpdate')->name('admin.user.update');
 Route::get('/user/delete/{user_id}', 'Admin\RoleController@userDelete')->name('admin.user.delete');
 Route::get('/user/restore/{user_id}', 'Admin\RoleController@userRestore')->name('admin.user.restore');
+
+
+// agents
+Route::get('/agents', 'Admin\AgentController@agents')->name('admin.agents');
+Route::get('/agent/create', 'Admin\AgentController@agentCreate')->name('admin.agent.create');
+Route::post('/agent/store', 'Admin\AgentController@agentStore')->name('admin.agent.store');
+Route::get('/agent/show/{agent_id}', 'Admin\AgentController@agentShow')->name('admin.agent.show');
+Route::post('/agent/update/{agent_id}', 'Business\CRMController@agentUpdate')->name('admin.agent.update');
+Route::get('/agent/delete/{agent_id}', 'Admin\AgentController@agentDelete')->name('admin.agent.delete');
+Route::get('/agent/restore/{agent_id}', 'Admin\AgentController@agentRestore')->name('admin.agent.restore');

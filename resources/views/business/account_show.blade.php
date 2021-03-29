@@ -25,19 +25,19 @@
         <div class="col-md-7">
             <div class="title-action">
                 @can('add account adjustment')
-                    <a href="{{route('business.account.adjustment.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary"><i class="fa fa-plus"></i> Account Adjustment </a>
+                    <a data-toggle="modal" data-target="#accountAdjustmentRegistration" class="btn btn-primary btn-round btn-outline"> <span class="fa fa-plus"></span> Account Adjustment </a>
                 @endcan
                 @can('add deposit')
-                    <a href="{{route('business.account.deposit.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary"><i class="fa fa-plus"></i> Deposit </a>
+                    <a href="{{route('business.account.deposit.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary btn-round btn-outline"><i class="fa fa-plus"></i> Deposit </a>
                 @endcan
                 @can('add loan')
-                    <a href="{{route('business.account.loan.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary"><i class="fa fa-plus"></i> Loan </a>
+                    <a href="{{route('business.account.loan.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary btn-round btn-outline"><i class="fa fa-plus"></i> Loan </a>
                 @endcan
                 @can('add withdrawal')
-                    <a href="{{route('business.account.withdrawal.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary"><i class="fa fa-plus"></i> Withdrawal </a>
+                    <a href="{{route('business.account.withdrawal.create',['portal'=>$institution->portal, 'id'=>$account->id])}}" class="btn btn-primary btn-round btn-outline"><i class="fa fa-plus"></i> Withdrawal </a>
                 @endcan
                 @can('add to do')
-                    <a data-toggle="modal" data-target="#toDoRegistration" class="btn btn-success btn-round btn-outline"> <span class="fa fa-plus"></span> To Do </a>
+                    <a data-toggle="modal" data-target="#toDoRegistration" class="btn btn-primary btn-round btn-outline"> <span class="fa fa-plus"></span> To Do </a>
                 @endcan
             </div>
         </div>
@@ -108,7 +108,7 @@
                                     @can('edit account')
                                         <hr>
                                         <div>
-                                            <button class="btn btn-primary btn-block btn-lg m-t-n-xs" type="submit"><strong>Update</strong></button>
+                                            <button class="btn btn-warning btn-block btn-lg m-t-n-xs" type="submit"><strong>Update</strong></button>
                                         </div>
                                     @endcan
                                 </form>
@@ -126,7 +126,7 @@
                         <div class="ibox-content">
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <div class="widget style1 navy-bg">
+                                    <div class="widget style1 lazur-bg">
                                         <div class="row vertical-align">
                                             <div class="col-xs-3">
                                                 <i class="fa fa-user fa-3x"></i>
@@ -150,7 +150,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <div class="widget style1 navy-bg">
+                                    <div class="widget style1 lazur-bg">
                                         <div class="row vertical-align">
                                             <div class="col-xs-3">
                                                 <i class="fa fa-plus-square fa-3x"></i>
@@ -162,7 +162,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-3">
-                                    <div class="widget style1 navy-bg">
+                                    <div class="widget style1 lazur-bg">
                                         <div class="row vertical-align">
                                             <div class="col-xs-3">
                                                 <i class="fa fa-scissors fa-3x"></i>
@@ -177,7 +177,7 @@
                             <hr>
                             <div class="row m-t-sm">
                                 <div class="col-lg-12">
-                                <div class="panel blank-panel">
+                                <div class="panel white-panel">
                                 <div class="panel-heading">
                                     <div class="panel-options">
                                         <ul class="nav nav-tabs">
@@ -839,6 +839,7 @@
 @endsection
 
 @include('business.layouts.modals.to_do_create')
+@include('business.layouts.modals.account_adjustment_create')
 
 @section('js')
 
@@ -975,6 +976,7 @@
         var date_today = mm + '/' + dd + '/' + yyyy;
         var time_curr = h + ':' + m;
         console.log(time_curr);
+        document.getElementById("date").value = date_today;
         document.getElementById("start_date").value = date_today;
         document.getElementById("end_date").value = date_today;
         document.getElementById("start_time").value = time_curr;

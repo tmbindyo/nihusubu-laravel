@@ -39,7 +39,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone Number</th>
-                                        <th>Plan</th>
                                         <th>Joined</th>
                                         <th>Status</th>
                                         <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
@@ -51,7 +50,6 @@
                                             <td>{{$institution->name}}</td>
                                             <td>{{$institution->email}}</td>
                                             <td>{{$institution->phone_number}}</td>
-                                            <td>{{$institution->plan->name}}</td>
                                             <td>{{$institution->created_at->format('d-m-yy')}}</td>
                                             <td>
                                                 <span class="label {{$institution->status->label}}">{{$institution->status->name}}</span>
@@ -69,7 +67,6 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone Number</th>
-                                        <th>Plan</th>
                                         <th>Joined</th>
                                         <th>Status</th>
                                         <th class="text-right" width="70em" data-sort-ignore="true">Action</th>

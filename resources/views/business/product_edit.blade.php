@@ -815,7 +815,7 @@
 <script>
     var subTotal = [];
     var adjustedValue;
-    var tableValueArrayIndex = {{$product_index}};
+    var tableValueArrayIndex = @if(isset($product_index)) {{$product_index}} @else 0 @endif;
     function addTableRow () {
         if (document.getElementById('is_created').checked) {
             var table = document.getElementById("estimate_table");

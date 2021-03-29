@@ -66,6 +66,9 @@
     <link href="{{ asset('inspinia') }}/css/plugins/slick/slick.css" rel="stylesheet">
     <link href="{{ asset('inspinia') }}/css/plugins/slick/slick-theme.css" rel="stylesheet">
 
+    <!-- Morris -->
+    <link href="{{ asset('inspinia') }}/css/plugins/morris/morris-0.4.3.min.css" rel="stylesheet">
+
     <!-- Toastr style -->
     <link href="{{ asset('inspinia') }}/css/plugins/toastr/toastr.min.css" rel="stylesheet">
 

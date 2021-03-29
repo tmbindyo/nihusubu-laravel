@@ -32,6 +32,10 @@ class Subscription extends Model implements Auditable
     }
 
     // children
+    public function agentCommissions()
+    {
+        return $this->hasMany('App\AgentCommission');
+    }
     public function subscriptionModules()
     {
         return $this->hasMany('App\SubscriptionModule');

@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Business;
 
 use App\Account;
+use App\BusinessEmail;
 use App\Mail\OrderSummary;
 use App\Mail\SendSaleEmail;
 use App\PaymentSchedule;
 use App\SaleEmail;
+use App\BusinessSms;
 use DB;
 use App\Address;
 use App\AlbumTag;
@@ -367,19 +369,19 @@ class SaleController extends Controller
         $institution = $this->getInstitution($portal);
         // Get sale
         $sale = Sale::where('id', $sale_id)->with('status', 'user', 'contact', 'saleProducts.product')->withCount('saleProducts')->first();
-        $saleEmail = new SaleEmail();
-        $saleEmail->to = $request->email;
-        $saleEmail->subject = $request->subject;
-        $saleEmail->body = $request->body;
-        $saleEmail->user_id = $user->id;
-        $saleEmail->sale_id = $sale->id;
-        $saleEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
-        $saleEmail->save();
-        $saleEmailDetails = SaleEmail::where('id',$saleEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
-//        return $saleEmailDetails;
+        $businessEmail = new BusinessEmail();
+        $businessEmail->to = $request->email;
+        $businessEmail->subject = $request->subject;
+        $businessEmail->body = $request->body;
+        $businessEmail->user_id = $user->id;
+        $businessEmail->sale_id = $sale->id;
+        $businessEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $businessEmail->save();
+        $businessEmailDetails = BusinessEmail::where('id',$businessEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
+//        return $businessEmailDetails;
 
         // send email
-        Mail::to($request->email)->send(new SendSaleEmail($saleEmailDetails));
+        Mail::to($request->email)->send(new SendSaleEmail($businessEmailDetails));
 
         return redirect()->route('business.estimate.show',['portal'=>$institution->portal, 'id'=>$sale->id])->withSuccess(__('Estimate '.$sale->reference.' successfully sent to '.$request->email.'.'));
 
@@ -736,19 +738,19 @@ class SaleController extends Controller
         $institution = $this->getInstitution($portal);
         // Get sale
         $sale = Sale::where('id', $sale_id)->with('status', 'user', 'contact', 'saleProducts.product')->withCount('saleProducts')->first();
-        $saleEmail = new SaleEmail();
-        $saleEmail->to = $request->email;
-        $saleEmail->subject = $request->subject;
-        $saleEmail->body = $request->body;
-        $saleEmail->user_id = $user->id;
-        $saleEmail->sale_id = $sale->id;
-        $saleEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
-        $saleEmail->save();
-        $saleEmailDetails = SaleEmail::where('id',$saleEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
-//        return $saleEmailDetails;
+        $businessEmail = new BusinessEmail();
+        $businessEmail->to = $request->email;
+        $businessEmail->subject = $request->subject;
+        $businessEmail->body = $request->body;
+        $businessEmail->user_id = $user->id;
+        $businessEmail->sale_id = $sale->id;
+        $businessEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $businessEmail->save();
+        $businessEmailDetails = BusinessEmail::where('id',$businessEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
+//        return $businessEmailDetails;
 
         // send email
-        Mail::to($request->email)->send(new SendSaleEmail($saleEmailDetails));
+        Mail::to($request->email)->send(new SendSaleEmail($businessEmailDetails));
 
         return redirect()->route('business.invoice.show',['portal'=>$institution->portal, 'id'=>$sale->id])->withSuccess(__('Invoice '.$sale->reference.' successfully sent to '.$request->email.'.'));
 
@@ -978,7 +980,7 @@ class SaleController extends Controller
 
     }
 
-    public function saleSend(Request $request, $portal, $sale_id)
+    public function businessSendEmail(Request $request, $portal, $sale_id)
     {
         // User
         $user = $this->getUser();
@@ -986,19 +988,45 @@ class SaleController extends Controller
         $institution = $this->getInstitution($portal);
         // Get sale
         $sale = Sale::where('id', $sale_id)->with('status', 'user', 'contact', 'saleProducts.product')->withCount('saleProducts')->first();
-        $saleEmail = new SaleEmail();
-        $saleEmail->to = $request->email;
-        $saleEmail->subject = $request->subject;
-        $saleEmail->body = $request->body;
-        $saleEmail->user_id = $user->id;
-        $saleEmail->sale_id = $sale->id;
-        $saleEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
-        $saleEmail->save();
-        $saleEmailDetails = SaleEmail::where('id',$saleEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
-//        return $saleEmailDetails;
+        $businessEmail = new BusinessEmail();
+        $businessEmail->to = $request->email;
+        $businessEmail->subject = $request->subject;
+        $businessEmail->body = $request->body;
+        $businessEmail->user_id = $user->id;
+        $businessEmail->sale_id = $sale->id;
+        $businessEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $businessEmail->save();
+        $businessEmailDetails = BusinessEmail::where('id',$businessEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
+//        return $businessEmailDetails;
 
         // send email
-        Mail::to($request->email)->send(new SendSaleEmail($saleEmailDetails));
+        Mail::to($request->email)->send(new SendSaleEmail($businessEmailDetails));
+
+        return redirect()->route('business.sale.show',['portal'=>$institution->portal, 'id'=>$sale->id])->withSuccess(__('Sale '.$sale->reference.' successfully sent to '.$request->body.'.'));
+
+    }
+
+    public function businessSendSMS(Request $request, $portal, $sale_id)
+    {
+        // User
+        $user = $this->getUser();
+        // Institution
+        $institution = $this->getInstitution($portal);
+        // Get sale
+        $sale = Sale::where('id', $sale_id)->with('status', 'user', 'contact', 'saleProducts.product')->withCount('saleProducts')->first();
+        $businessEmail = new BusinessSms();
+        $businessEmail->to = $request->email;
+        $businessEmail->body = $request->body;
+        $businessEmail->user_id = $user->id;
+        $businessEmail->is_sale = True;
+        $businessEmail->sale_id = $sale->id;
+        $businessEmail->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $businessEmail->save();
+        $businessEmailDetails = BusinessEmail::where('id',$businessEmail->id)->with('sale.saleProducts', 'sale.institution.currency')->first();
+//        return $businessEmailDetails;
+
+        // send email
+        Mail::to($request->email)->send(new SendSaleEmail($businessEmailDetails));
 
         return redirect()->route('business.sale.show',['portal'=>$institution->portal, 'id'=>$sale->id])->withSuccess(__('Sale '.$sale->reference.' successfully sent to '.$request->body.'.'));
 

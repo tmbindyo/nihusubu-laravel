@@ -21,7 +21,7 @@
             </div>
             <div class="col-lg-2">
                 <div class="title-action">
-                    @can('admin create user')
+                    @can('admin add user')
                         <a data-toggle="modal" data-target="#userRegistration" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> User </a>
                     @endcan
                 </div>

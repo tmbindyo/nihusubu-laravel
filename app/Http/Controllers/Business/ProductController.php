@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Business;
 use App\Item;
 use App\ProductItem;
 use App\ProductSubCategory;
+use App\SaleProduct;
 use App\TaxMethod;
 use App\Traits\ReferenceNumberTrait;
 use DB;
@@ -1370,7 +1371,27 @@ class ProductController extends Controller
 
         Product::findOrFail($product_id);
         $product = Product::where('institution_id', $institution->id)->where('id', $product_id)->with('status', 'inventory.warehouse', 'inventory.status', 'restock', 'unit', 'saleProducts', 'user', 'inventoryAdjustmentProducts', 'transferOrderProducts', 'productImages.upload', 'taxMethod', 'productItems.item')->withCount('saleProducts', 'restock')->first();
-//         return $product;
+        // sale products
+        $saleProducts = SaleProduct::where('product_id',$product->id)->whereHas('sale', function($q) {
+            $q->where('is_sale', 1);
+        })->with('sale', 'product')->get();
+
+        $saleProductGroup = SaleProduct::where('product_id',$product->id)->whereHas('sale', function($q) {
+            $q->where('is_sale', 1);
+        })->with('sale', 'product')->orderBy('date')->groupBy(DB::raw('MONTH(created_at)'));
+
+//        $saleProductGroup = SaleProduct::where('product_id',$product->id)->whereHas('sale', function($q) {
+//            $q->where('is_sale', 1);
+//        })->with('sale', 'product')
+//        ->where('created_at', '>=', \Carbon\Carbon::now->subMonth())
+//        ->groupBy('date')->orderBy('date', 'DESC')
+//        ->get(array(
+//            DB::raw('Date(created_at) as date'),
+//            DB::raw('COUNT(*) as "views"')
+//        ));
+//        return $saleProductGroup;
+
+
 
         return view('business.product_show', compact('product', 'user', 'institution'));
     }

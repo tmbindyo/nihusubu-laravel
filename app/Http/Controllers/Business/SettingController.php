@@ -2,34 +2,36 @@
 
 namespace App\Http\Controllers\Business;
 
+use Auth;
+use App\Tax;
+use App\Unit;
+use App\Plan;
 use App\Brand;
-use App\Campaign;
-use App\CampaignType;
+use App\Title;
+use App\Module;
 use App\Contact;
-use App\ContactContactType;
-use App\ContactType;
+use App\Product;
+use App\Campaign;
 use App\Currency;
 use App\Frequency;
-use App\InstitutionModule;
-use App\Module;
-use App\PaymentSchedule;
-use App\Plan;
-use App\Product;
-use App\ProductCategory;
-use App\ProductSubCategory;
 use App\ProductTax;
+use App\LeadSource;
 use App\UserAccount;
-use Auth;
-use App\Unit;
-use App\Title;
+use App\ContactType;
+use App\Organization;
+use App\Subscription;
+use App\CampaignType;
+use App\ProductCategory;
+use App\PaymentSchedule;
 use App\Traits\UserTrait;
+use App\InstitutionModule;
+use App\SubscriptionModule;
+use App\ProductSubCategory;
+use App\ContactContactType;
 use Illuminate\Http\Request;
 use App\Traits\InstitutionTrait;
-use App\Http\Controllers\Controller;
-use App\LeadSource;
-use App\Organization;
-use App\Tax;
 use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class SettingController extends Controller
 {
@@ -98,8 +100,6 @@ class SettingController extends Controller
         // Get roles
         $roles = Role::where('institution_id', $institution->id)->with('permissions')->get();
         $roleNames = Role::where('institution_id', $institution->id)->pluck('name')->toArray();
-        // return $roleNames;
-        // return $roles;
         // users
         $users = UserAccount::where('status_id', "c670f7a2-b6d1-4669-8ab5-9c764a1e403e")->where('institution_id',$institution->id)->with('user.roles')->get();
         // deleted users
@@ -110,9 +110,12 @@ class SettingController extends Controller
         $currencies = Currency::get();
         // modules
         $modules = Module::where('status_id', "c670f7a2-b6d1-4669-8ab5-9c764a1e403e")->where('is_business',true)->get();
+        // subscriptions
+        $subscriptions = Subscription::where('institution_id',$institution->id)->get();
+
         // get institution modules
         $institutionModulesIds = InstitutionModule::where('status_id', "c670f7a2-b6d1-4669-8ab5-9c764a1e403e")->where('institution_id',$institution->id)->pluck('module_id')->toArray();
-        return view('business.settings', compact('brands', 'user', 'institution', 'brands', 'deletedBrands', 'campaignTypes', 'deletedCampaignTypes', 'contactTypes', 'deletedContactTypes', 'frequencies', 'deletedFrequencies', 'leadSources', 'deletedLeadSources', 'productCategories', 'deletedProductCategories', 'productSubCategories', 'deletedProductSubCategories', 'taxes', 'deletedTaxes', 'titles', 'deletedTitles', 'units', 'deletedUnits', 'roles', 'users', 'deletedUsers', 'plans', 'currencies', 'modules', 'institutionModulesIds', 'paymentSchedules' ,'deletedPaymentSchedules', 'roleNames'));
+        return view('business.settings', compact('brands', 'user', 'institution', 'brands', 'deletedBrands', 'campaignTypes', 'deletedCampaignTypes', 'contactTypes', 'deletedContactTypes', 'frequencies', 'deletedFrequencies', 'leadSources', 'deletedLeadSources', 'productCategories', 'deletedProductCategories', 'productSubCategories', 'deletedProductSubCategories', 'taxes', 'deletedTaxes', 'titles', 'deletedTitles', 'units', 'deletedUnits', 'roles', 'users', 'deletedUsers', 'plans', 'currencies', 'modules', 'institutionModulesIds', 'paymentSchedules' ,'deletedPaymentSchedules', 'roleNames', 'subscriptions'));
     }
 
 
@@ -1078,6 +1081,21 @@ class SettingController extends Controller
         $productSubCategory->status_id = "c670f7a2-b6d1-4669-8ab5-9c764a1e403e";
         $productSubCategory->restore();
         return back()->withSuccess(__('Product category successfully restored.'));
+    }
+
+
+    // subscription
+    public function subscriptionPrint($portal, $subscription_id)
+    {
+        // Check if lead source exists
+        $subscriptionExists = Subscription::findOrFail($subscription_id);
+        // User
+        $user = $this->getUser();;
+        // Institution
+        $institution = $this->getInstitution($portal);
+        // Get lead source
+        $subscription = Subscription::with('user', 'status', 'subscriptionModules', 'subscriptionModules.module')->where('id', $subscription_id)->withCount('subscriptionModules')->first();
+        return view('business.subscription_print', compact('subscription', 'user', 'institution'));
     }
 
     // units

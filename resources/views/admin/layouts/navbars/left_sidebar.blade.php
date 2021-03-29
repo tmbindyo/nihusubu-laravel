@@ -73,6 +73,11 @@
                     <a href="{{ route('admin.users') }}"><i class="fa fa-users"></i> <span class="nav-label">Users</span></a>
                 </li>
             @endcan
+            @can('admin view agents')
+                <li class="nav-item {{ Route::currentRouteNamed( 'admin.agents' ) ?  'active' : '' }}">
+                    <a href="{{ route('admin.agents') }}"><i class="fa fa-list-alt"></i> <span class="nav-label">Agents</span></a>
+                </li>
+            @endcan
             @can('admin view roles')
                 <li class="nav-item {{ Route::currentRouteNamed( 'admin.roles' ) ?  'active' : '' }}">
                     <a href="{{ route('admin.roles') }}"><i class="fa fa-list-alt"></i> <span class="nav-label">Roles</span></a>

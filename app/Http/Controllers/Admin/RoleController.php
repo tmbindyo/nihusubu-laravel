@@ -186,48 +186,35 @@ class RoleController extends Controller
             $userAccount = UserAccount::where('user_id',$userReg->id)->where('is_admin', true)->first();
             if ($userAccount){
                 return back()->withWarning(__('This user already has an account!'));
-            }else{
-                // add user account
-                $newUserAccount = new UserAccount();
-                $newUserAccount->is_user = false;
-                $newUserAccount->is_admin = true;
-                $newUserAccount->is_active = false;
-                $newUserAccount->is_institution = false;
-                $newUserAccount->user_type_id = '4be20a9a-aee3-414c-b8ba-dcacf859cc9c';
-                $newUserAccount->status_id = "c670f7a2-b6d1-4669-8ab5-9c764a1e403e";
-                $newUserAccount->user_id = $userReg->id;
-                $newUserAccount->registerer_id = $user->id;
-                $newUserAccount->save();
-
-                // send email to inform
             }
 
-        }else{
-
+        }else
+        {
             // create user
-            // user account creation
             $userReg = new User();
             $userReg->name = $request->first_name.' '.$request->last_name;
             $userReg->email = $request->email;
             $userReg->phone_number = $request->phone_number;
             $userReg->password = Hash::make('pending');
             $userReg->save();
-
-            // create user account
-            $newUserAccount = new UserAccount();
-            $newUserAccount->is_user = false;
-            $newUserAccount->is_admin = true;
-            $newUserAccount->is_active = false;
-            $newUserAccount->is_institution = false;
-            $newUserAccount->user_type_id = '4be20a9a-aee3-414c-b8ba-dcacf859cc9c';
-            $newUserAccount->status_id = "c670f7a2-b6d1-4669-8ab5-9c764a1e403e";
-            $newUserAccount->user_id = $userReg->id;
-            $newUserAccount->save();
-            $userAccount = UserAccount::where('id',$newUserAccount->id)->with('user','institution')->first();
-
-            // send user email
-            Mail::to($request->email)->send(new AdminInviteUser($userAccount));
         }
+
+        // create user account
+        $newUserAccount = new UserAccount();
+        $newUserAccount->is_user = false;
+        $newUserAccount->is_admin = true;
+        $newUserAccount->is_active = false;
+        $newUserAccount->is_institution = false;
+        $newUserAccount->is_agent = false;
+        $newUserAccount->user_type_id = '4be20a9a-aee3-414c-b8ba-dcacf859cc9c';
+        $newUserAccount->status_id = "c670f7a2-b6d1-4669-8ab5-9c764a1e403e";
+        $newUserAccount->user_id = $userReg->id;
+        $newUserAccount->registerer_id = $user->id;
+        $newUserAccount->save();
+        $userAccount = UserAccount::where('id',$newUserAccount->id)->with('user','institution')->first();
+
+        // send user email
+        Mail::to($request->email)->send(new AdminInviteUser($userAccount));
 
         // get role
         $role = Role::where('id', decrypt($request->role))->with('permissions')->first();

@@ -21,6 +21,9 @@
             </div>
             <div class="col-lg-2">
                 <div class="title-action">
+                    @can('admin record institution subscription payment')
+                    <a data-toggle="modal" data-target="#recordInstitutionPayment" class="btn btn-primary pull-right btn-round btn-outline"> <span class="fa fa-plus"></span> Payment </a>
+                    @endcan
                 </div>
             </div>
         </div>
@@ -42,13 +45,13 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered table-hover dataTables-example" >
                                     <thead>
-                                    <tr>
-                                        <th>Institution</th>
-                                        <th>Amount</th>
-                                        <th>User</th>
-                                        <th>Created</th>
-                                        <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Institution</th>
+                                            <th>Amount</th>
+                                            <th>User</th>
+                                            <th>Created</th>
+                                            <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
+                                        </tr>
                                     </thead>
                                     <tbody>
                                     @foreach($subscriptionPayments as $subscriptionPayment)
@@ -68,13 +71,13 @@
                                     @endforeach
                                     </tbody>
                                     <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Amount</th>
-                                        <th>User</th>
-                                        <th>Created</th>
-                                        <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
-                                    </tr>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Amount</th>
+                                            <th>User</th>
+                                            <th>Created</th>
+                                            <th class="text-right" width="70em" data-sort-ignore="true">Action</th>
+                                        </tr>
                                     </tfoot>
                                 </table>
                             </div>
@@ -87,7 +90,7 @@
 
 @endsection
 
-{{-- @include('admin.layouts.modals.user_add') --}}
+@include('admin.layouts.modals.institution_payment_add')
 
 @section('js')
 

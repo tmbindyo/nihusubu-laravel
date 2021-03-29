@@ -18,7 +18,7 @@
         </div>
         <div class="col-md-9">
             <div class="title-action">
-                @can('admin create user')
+                @can('admin add user')
                     <a data-toggle="modal" data-target="#roleRegistration" class="btn btn-primary btn-round btn-outline"> <span class="fa fa-plus"></span> Role </a>
                 @endcan
             </div>

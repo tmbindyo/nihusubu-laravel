@@ -10,6 +10,16 @@ class UploadTypeTableSeeder extends Seeder
      * @return void
      */
     public function run()    {
+
+        DB::table('upload_types')->insert([
+            'id' => 'D2583EA1-B175-482E-89CF-AA8D4AE73391',
+            'name' => 'nihusubu logo',
+            'description' => 'nihusubu logo',
+            'status_id' => 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e',
+            'user_id' => 1,
+            'created_at' => now()
+        ]);
+
         DB::table('service_types')->insert([
             'id' => '4be20a9a-aee3-414c-b8ba-dcacf859cc9c',
             'name' => 'avatar',
