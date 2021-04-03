@@ -24,6 +24,7 @@ use App\CampaignType;
 use App\ExpenseAccount;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\PromoCode;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -37,14 +38,16 @@ class AuthController extends Controller
     {
 
         $plans = Plan::where('plan_type_id', '7dd05c3c-7526-498b-9fbb-d0c766a678ac')->get();
-        return view('auth.register', compact('plans'));
+        $modules = Module::where('status_id', "c670f7a2-b6d1-4669-8ab5-9c764a1e403e")->where('is_business',true)->get();
+        return view('auth.register', compact('plans', 'modules'));
     }
 
     public function standardSignup()
     {
 
         $plan = Plan::where('id', '410f31ed-47be-4658-930a-a47f2839ebf5')->first();
-        return view('auth.business_register', compact('plan'));
+        $modules = Module::where('status_id', "c670f7a2-b6d1-4669-8ab5-9c764a1e403e")->where('is_business',true)->get();
+        return view('auth.business_register', compact('plan', 'modules'));
     }
 
     public function professionalSignup()

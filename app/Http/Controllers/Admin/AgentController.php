@@ -62,7 +62,7 @@ class AgentController extends Controller
 
         if($userReg){
             // get role
-            $role = Role::where('id', decrypt($request->role))->with('permissions')->first();
+            $role = Role::where('name', 'agent')->with('permissions')->first();
             // assign role
             $userReg->assignRole($role);
             // check if user has an account
@@ -70,9 +70,8 @@ class AgentController extends Controller
             if ($userAccount){
                 return back()->withWarning(__('This user already has an account!'));
             }
-
-        }else
-        {
+        }
+        else{
             // create user
             $userReg = new User();
             $userReg->name = $request->first_name.' '.$request->last_name;

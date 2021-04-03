@@ -116,7 +116,9 @@
                                         </span>
                                     @endif
                                     <label>Business Name *</label>
-                                    <input id="business_name" name="business_name" placeholder="{{ __('Business name') }}" value="{{ old('business_name') }}" type="text" class="form-control {{ $errors->has('business_name') ? ' is-invalid' : '' }} input-lg required" onchange = "businessNameChange(this)">
+                                    <div class="has-warning">
+                                        <input id="business_name" name="business_name" placeholder="{{ __('Business name') }}" value="{{ old('business_name') }}" type="text" class="form-control {{ $errors->has('business_name') ? ' is-invalid' : '' }} input-lg required" onchange = "businessNameChange(this)">
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     @if ($errors->has('portal'))
@@ -203,19 +205,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    @if ($errors->has('currency'))
-                                        <span class="invalid-feedback" style="display: block;" role="alert">
-                                            <strong>{{ $errors->first('currency') }}</strong>
-                                        </span>
-                                    @endif
-                                    <label>Currency *</label>
-                                    <select name="currency" id="currency" class="form-control input-lg {{ $errors->has('currency') ? ' is-invalid' : '' }} required">
-                                        <option selected value="0839e6c9-20b3-4442-b3b6-5137a4d309ec">KES - Kenyan Shillings</option>
-                                    </select>
-                                </div>
-                            </div>
+
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     @if ($errors->has('plan'))
@@ -223,16 +213,57 @@
                                             <strong>{{ $errors->first('plan') }}</strong>
                                         </span>
                                     @endif
-                                    <label>Planss *</label>
-                                    <select name="plan" id="plan" class="form-control input-lg {{ $errors->has('plan') ? ' is-invalid' : '' }} required">
-                                        @foreach($plans as $plan)
-                                            <option value="{{$plan->id}}">{{$plan->name}}[{{$plan->price}}]</option>
-                                        @endforeach
-                                    </select>
+                                    <label>Promo Code</label>
+                                    <input id="promo_code" name="promo_code" placeholder="{{ __('Promo Code') }}" value="{{ old('promo_code') }}" type="text" class="form-control {{ $errors->has('promo_code') ? ' is-invalid' : '' }} input-lg">
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    @if ($errors->has('plan'))
+                                        <span class="invalid-feedback" style="display: block;" role="alert">
+                                            <strong>{{ $errors->first('plan') }}</strong>
+                                        </span>
+                                    @endif
+                                    <label>Agent Code</label>
+                                    <input id="agent_code" name="agent_code" placeholder="{{ __('Agent Code') }}" value="{{ old('agent_code') }}" type="text" class="form-control {{ $errors->has('agent_code') ? ' is-invalid' : '' }} input-lg">
                                 </div>
                             </div>
 
                         </div>
+                    </fieldset>
+
+                    <h1>Modules</h1>
+                    <fieldset>
+
+                        <div class="row">
+                            @foreach ($modules as $module)
+
+                                <div class="col-lg-3">
+                                    <div class="widget style1 lazur-bg">
+                                        <div class="row">
+                                            <div class="col-xs-4">
+
+                                                <div class="checkbox checkbox-primary">
+                                                    <input id="{{$module->id}}" type="checkbox" >
+                                                    <label for="{{$module->id}}">
+                                                        {{$module->name}}
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                            <div class="col-xs-8 text-right">
+                                                <span> Today degrees </span>
+                                                <h2 class="font-bold">26'C</h2>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            @endforeach
+                        </div>
+
                     </fieldset>
 
 

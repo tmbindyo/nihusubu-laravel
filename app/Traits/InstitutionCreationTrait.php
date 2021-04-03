@@ -27,6 +27,8 @@ use App\CampaignType;
 use App\ExpenseAccount;
 use App\PaymentSchedule;
 use App\InstitutionModule;
+use App\PromoCode;
+use App\PromoCodeUse;
 use http\Client\Response;
 use Spatie\Permission\Models\Role;
 use App\Traits\ReferenceNumberTrait;
@@ -118,7 +120,16 @@ trait InstitutionCreationTrait
 
     public function institutionSeeder($request, $user, $address){
 
-        $joined_with_agent = False;
+        $promo_code = PromoCode::where('reference',$request->promo_code)->first();
+
+        if ($promo_code){
+            $joined_with_agent = True;
+        }
+        else{
+            $joined_with_agent = False;
+        }
+
+
         $agent_id = null;
         $agent_code = intval($request->agent_code);
         $agent = Agent::where('code',$agent_code)->first();
@@ -133,16 +144,25 @@ trait InstitutionCreationTrait
         $institution->email = $request->business_email;
         $institution->phone_number = $request->business_phone_number;
         $institution->user_id = $user->id;
-        $institution->currency_id = $request->currency;
+        $institution->currency_id = '0839e6c9-20b3-4442-b3b6-5137a4d309ec';
+        $institution->due = 0;
         $institution->is_active = true;
         $institution->is_sale_tax = true;
         $institution->is_sale_random = true;
-        $institution->is_agent_signup = $joined_with_agent;
         $institution->is_agent_signup = $joined_with_agent;
         $institution->address_id = $address->id;
         $institution->agent_id = $agent_id;
         $institution->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
         $institution->save();
+
+
+        $promoCodeUse = new PromoCodeUse();
+        $promoCodeUse->institution_id = $institution->id;
+        $promoCodeUse->is_institution = True;
+        $promoCodeUse->is_user = False;
+        $promoCodeUse->user_id = $user->id;
+        $promoCodeUse->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $promoCodeUse->save();
 
         return $institution;
     }

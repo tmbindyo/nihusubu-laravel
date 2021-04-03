@@ -128,8 +128,6 @@ class HomeController extends Controller
             'portal' => ['required', 'string', 'max:255', 'unique:institutions'],
         ]);
 
-
-
         // create address
         $address = $this->addressSeeder($request, $user);
         // create institution

@@ -56,14 +56,14 @@
                     <div class="row">
                         <div class="col-md-6">
                             <div class="has-warning">
-                                <input type="text" id="id_number" name="id_number" required="required" placeholder="First Name" class="form-control input-lg">
+                                <input type="text" id="id_number" name="id_number" required="required" placeholder="ID Number" class="form-control input-lg">
                                 <i>ID Number</i>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="has-warning">
-                                <input type="text" id="kra_pin" name="kra_pin" required="required" placeholder="Last Name" class="form-control input-lg">
-                                <i>kra_pin</i>
+                                <input type="text" id="kra_pin" name="kra_pin" required="required" placeholder="KRA Pin" class="form-control input-lg">
+                                <i>KRA Pin</i>
                             </div>
                         </div>
                     </div>
