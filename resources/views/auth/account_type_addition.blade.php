@@ -51,7 +51,7 @@
             <p><a target="_blank" href="{{route('terms.and.conditions')}}">Terms and Conditions</a></p>
             @if($personalUserAccount)
             @else
-                <a href="{{route('add.personal.account')}}" class="btn btn-primary block full-width">Add Personal Account</a>
+                {{-- <a href="{{route('add.personal.account')}}" class="btn btn-primary block full-width">Add Personal Account</a> --}}
             @endif
             <br>
             <a href="{{route('business.add')}}" class="btn btn-primary block full-width">Add Business Account</a>
