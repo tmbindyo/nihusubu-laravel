@@ -19,13 +19,6 @@ class CreatePromoCodesTable extends Migration
             $table->string('reference')->unique();
 
             $table->integer('days')->nullable();
-            $table->boolean('is_days')->nullable();
-
-            $table->integer('weeks')->nullable();
-            $table->boolean('is_weeks')->nullable();
-
-            $table->integer('years')->nullable();
-            $table->boolean('is_years')->nullable();
 
             $table->integer('user_id')->unsigned();
             $table->uuid('status_id');

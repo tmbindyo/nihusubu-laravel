@@ -74,6 +74,7 @@ class UserTableSeeder extends Seeder
             'password' => Hash::make('NGIB9Iqq4B2imP$u'),
             'created_at' => now()
         ]);
+
         // get user
         $rohniUser = User::findOrFail(4);
         // get role
@@ -94,15 +95,11 @@ class UserTableSeeder extends Seeder
             'created_at' => now()
         ]);
 
-
         DB::table('promo_codes')->insert([
             'id' => '07c99d10-8e09-4861-83df-fdd3700d7e48',
             'reference' => 'fluidtalks',
 
-            'is_days' => True,
             'days' => '90',
-            'is_weeks' => False,
-            'is_years' => False,
 
             'is_active' => True,
             'is_agent' => False,

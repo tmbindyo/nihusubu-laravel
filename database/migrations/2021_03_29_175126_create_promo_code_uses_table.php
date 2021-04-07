@@ -19,10 +19,10 @@ class CreatePromoCodeUsesTable extends Migration
             $table->uuid('promo_code_id');
 
             $table->boolean('is_institution');
-            $table->uuid('institution_id');
+            $table->uuid('institution_id')->nullable();
 
             $table->boolean('is_user');
-            $table->integer('promo_user_id')->unsigned();
+            $table->integer('promo_user_id')->unsigned()->nullable();
 
             $table->integer('user_id')->unsigned();
             $table->uuid('status_id');

@@ -122,13 +122,7 @@ trait InstitutionCreationTrait
 
         $promo_code = PromoCode::where('reference',$request->promo_code)->first();
 
-        if ($promo_code){
-            $joined_with_agent = True;
-        }
-        else{
-            $joined_with_agent = False;
-        }
-
+        $trialDuration = 30;
 
         $agent_id = null;
         $agent_code = intval($request->agent_code);
@@ -136,6 +130,8 @@ trait InstitutionCreationTrait
         if ($agent){
             $joined_with_agent = True;
             $agent_id = $agent->id;
+        }else{
+            $joined_with_agent = False;
         }
 
         $institution = new Institution();
@@ -156,15 +152,106 @@ trait InstitutionCreationTrait
         $institution->save();
 
 
-        $promoCodeUse = new PromoCodeUse();
-        $promoCodeUse->institution_id = $institution->id;
-        $promoCodeUse->is_institution = True;
-        $promoCodeUse->is_user = False;
-        $promoCodeUse->user_id = $user->id;
-        $promoCodeUse->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
-        $promoCodeUse->save();
+        if ($promo_code){
+
+            $trialDuration = $promo_code->days;
+
+            $promoCodeUse = new PromoCodeUse();
+            $promoCodeUse->promo_code_id = $promo_code->id;
+            $promoCodeUse->institution_id = $institution->id;
+            $promoCodeUse->is_institution = True;
+            $promoCodeUse->is_user = False;
+            $promoCodeUse->user_id = $user->id;
+            $promoCodeUse->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+            $promoCodeUse->save();
+        }
 
         return $institution;
+    }
+
+    public function subscriptionSeeder($request, $user, $institution){
+
+        $promoCodeUse = PromoCodeUse::where('institution_id',$institution->id)->with('promoCode')->first();
+
+        $trialDuration = 0;
+
+        if($promoCodeUse){
+            $is_trial_period = True;
+            $trialDuration = $promoCodeUse->promoCode->days;
+        }else{
+            $is_trial_period = False;
+        }
+
+        $today = date('Y-m-d');
+        $nextMonth = date('m', strtotime($today. ' + 1 month'));
+        $testSubscriptionMonth = now()->format('m');
+
+        if($testSubscriptionMonth == 12){
+            $trialEnd = date('Y-m-d', strtotime(now(). '+ 1 year'));
+            $subscriptionYear = date('Y', strtotime(now(). '+ 1 year'));
+            $subscriptionMonth = 1;
+        }else{
+            $subscriptionYear = now()->format('yy');
+            $subscriptionMonth = date('m', strtotime(now(). '+ 1 month'));
+        }
+
+        $size = 5;
+        $reference = $this->getRandomString($size);
+
+        $end_date = date('Y-m-d', strtotime('+'.$trialDuration.' days'));
+
+        // create new subscription for next month
+        $nextMonthSubscription = new Subscription();
+        $nextMonthSubscription->trial_duration = $trialDuration;
+        $nextMonthSubscription->reference = $reference;
+        $nextMonthSubscription->amount = 0;
+        $nextMonthSubscription->start_date = now();
+        $nextMonthSubscription->end_date = $end_date;
+        $nextMonthSubscription->month = $subscriptionMonth;
+        $nextMonthSubscription->year = $subscriptionYear;
+        $nextMonthSubscription->is_institution = true;
+        $nextMonthSubscription->is_user = false;
+        $nextMonthSubscription->is_active = false;
+
+        $nextMonthSubscription->is_paid = false;
+        $nextMonthSubscription->is_fully_paid = false;
+        $nextMonthSubscription->paid = 0;
+        $nextMonthSubscription->is_trial_period = $is_trial_period;
+        $nextMonthSubscription->is_promotion = false;
+
+        $nextMonthSubscription->institution_id = $institution->id;
+        $nextMonthSubscription->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+        $nextMonthSubscription->user_id = 1;
+        $nextMonthSubscription->is_paid = false;
+        $nextMonthSubscription->save();
+
+
+
+        // create institution module records
+        $institutionModules = InstitutionModule::where('institution_id',$institution->id)->with('subscriptionModules', 'totalSubsciption', 'module', 'status')->get();
+        foreach($institutionModules as $institutionModule){
+            // check if subscription module exists
+            $subscriptionModuleExists = SubscriptionModule::where('institution_id',$institution->id)->where('module_id', $institutionModule->module->id)->where('year', now()->format('yy'))->where('month', $subscriptionMonth)->first();
+
+            $end_date = date('Y-m-d', strtotime('+3 months'));
+            // create institution module subscription tracker
+            $subscriptionModule = new SubscriptionModule();
+            $subscriptionModule->amount = 0;
+            $subscriptionModule->month = $subscriptionMonth;
+            $subscriptionModule->year = $subscriptionYear;
+            $subscriptionModule->last_updated = date('Y-m-d', strtotime(now()));
+            $subscriptionModule->start_date = now();
+            $subscriptionModule->end_date = $end_date;
+            $subscriptionModule->module_id = $institutionModule->module->id;
+            $subscriptionModule->subscription_id = $nextMonthSubscription->id;
+            $subscriptionModule->institution_module_id = $institutionModule->id;
+            $subscriptionModule->institution_id = $institution->id;
+            $subscriptionModule->status_id = 'c670f7a2-b6d1-4669-8ab5-9c764a1e403e';
+            $subscriptionModule->user_id = 1;
+            $subscriptionModule->is_active = true;
+            $subscriptionModule->save();
+        }
+        return $nextMonthSubscription;
     }
 
     public function addressSeeder($request, $user){

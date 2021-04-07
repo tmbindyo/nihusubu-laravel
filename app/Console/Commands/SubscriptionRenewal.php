@@ -105,6 +105,8 @@ class SubscriptionRenewal extends Command
                 $nextMonthSubscription->is_active = false;
 
                 $nextMonthSubscription->is_paid = false;
+                $nextMonthSubscription->is_fully_paid = false;
+                $nextMonthSubscription->paid = 0;
                 $nextMonthSubscription->is_trial_period = $is_trial_period;
                 $nextMonthSubscription->is_promotion = false;
 

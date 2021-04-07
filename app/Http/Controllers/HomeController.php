@@ -162,6 +162,8 @@ class HomeController extends Controller
         $this->institutionAdminRoleSeeder($user, $institution);
         // create user account
         $userAccount = $this->userAccountSeeder($user, $institution);
+        // institution modules
+        $this->subscriptionSeeder($request, $user, $institution);
 
         // account creation
         return redirect()->route('activate.user.account', $userAccount->id);

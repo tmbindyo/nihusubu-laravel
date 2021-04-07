@@ -127,6 +127,9 @@ class AuthController extends Controller
         $this->institutionAdminRoleSeeder($user, $institution);
         // create user account
         $this->userAccountSeeder($user, $institution);
+        // institution modules
+        $this->subscriptionSeeder($request, $user, $institution);
+
 
         // login user
         auth()->login($user);

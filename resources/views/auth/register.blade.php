@@ -234,8 +234,8 @@
                         </div>
                     </fieldset>
 
-                    <h1>Modules</h1>
-                    <fieldset>
+                    {{-- <h1>Modules</h1> --}}
+                    {{-- <fieldset>
 
                         <div class="row">
                             @foreach ($modules as $module)
@@ -264,7 +264,7 @@
                             @endforeach
                         </div>
 
-                    </fieldset>
+                    </fieldset> --}}
 
 
                     <h1>Finish</h1>

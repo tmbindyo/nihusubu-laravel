@@ -23,5 +23,9 @@ class PromoCodeUse extends Model implements Auditable
     {
         return $this->belongsTo('App\User');
     }
+    public function promoCode()
+    {
+        return $this->belongsTo('App\PromoCode');
+    }
 
 }
